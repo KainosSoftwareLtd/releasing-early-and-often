@@ -1,0 +1,62 @@
+{% extends "template.njk" %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block mainContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "/date-of-birth"
+  }) }}
+
+  {% if error %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: error,
+          href: "#previous-passport"
+        }
+      ]
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form method="post" novalidate>
+        {{ govukRadios({
+          idPrefix: "previous-passport",
+          name: "previousPassport",
+          fieldset: {
+            legend: {
+              text: "Have you had a UK passport before?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          errorMessage: {
+            text: error
+          } if error,
+          items: [
+            {
+              value: "yes",
+              text: "Yes",
+              checked: value === "yes"
+            },
+            {
+              value: "no",
+              text: "No",
+              checked: value === "no"
+            }
+          ]
+        }) }}
+
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

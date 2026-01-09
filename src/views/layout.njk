@@ -1,0 +1,28 @@
+{% extends "govuk/template.njk" %}
+
+{% from "govuk/components/header/macro.njk" import govukHeader %}
+{% from "govuk/components/footer/macro.njk" import govukFooter %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
+
+{% block head %}
+  <link href="/assets/govuk-frontend.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block header %}
+  {{ govukHeader({
+    homepageUrl: "/",
+    serviceName: "Apply for a UK Passport",
+    serviceUrl: "/"
+  }) }}
+{% endblock %}
+
+{% block footer %}
+  {{ govukFooter() }}
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="/assets/govuk-frontend.min.js"></script>
+  <script>
+    window.GOVUKFrontend.initAll();
+  </script>
+{% endblock %}

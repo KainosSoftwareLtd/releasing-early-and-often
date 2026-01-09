@@ -1,0 +1,65 @@
+{% extends "template.njk" %}
+
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block mainContent %}
+  {% if errors.dateOfBirth %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: errors.dateOfBirth,
+          href: "#dob-day"
+        }
+      ]
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form method="post" novalidate>
+        {{ govukDateInput({
+          id: "dob",
+          namePrefix: "",
+          fieldset: {
+            legend: {
+              text: "What is your date of birth?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          hint: {
+            text: "For example, 31 3 1980"
+          },
+          errorMessage: {
+            text: errors.dateOfBirth
+          } if errors.dateOfBirth,
+          items: [
+            {
+              name: "day",
+              classes: "govuk-input--width-2" + (" govuk-input--error" if errors.dateOfBirth),
+              value: values.day
+            },
+            {
+              name: "month",
+              classes: "govuk-input--width-2" + (" govuk-input--error" if errors.dateOfBirth),
+              value: values.month
+            },
+            {
+              name: "year",
+              classes: "govuk-input--width-4" + (" govuk-input--error" if errors.dateOfBirth),
+              value: values.year
+            }
+          ]
+        }) }}
+
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

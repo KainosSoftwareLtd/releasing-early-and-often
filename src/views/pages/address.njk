@@ -1,0 +1,96 @@
+{% extends "template.njk" %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block mainContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "/previous-passport"
+  }) }}
+
+  {% if errors.addressLine1 or errors.townCity or errors.postcode %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: errors.addressLine1,
+          href: "#addressLine1"
+        } if errors.addressLine1,
+        {
+          text: errors.townCity,
+          href: "#townCity"
+        } if errors.townCity,
+        {
+          text: errors.postcode,
+          href: "#postcode"
+        } if errors.postcode
+      ]
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">What is your address?</h1>
+
+      <form method="post" novalidate>
+        {{ govukInput({
+          label: {
+            text: "Address line 1"
+          },
+          id: "addressLine1",
+          name: "addressLine1",
+          value: values.addressLine1,
+          errorMessage: {
+            text: errors.addressLine1
+          } if errors.addressLine1,
+          autocomplete: "address-line1"
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Address line 2 (optional)"
+          },
+          id: "addressLine2",
+          name: "addressLine2",
+          value: values.addressLine2,
+          autocomplete: "address-line2"
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Town or city"
+          },
+          id: "townCity",
+          name: "townCity",
+          value: values.townCity,
+          classes: "govuk-!-width-two-thirds",
+          errorMessage: {
+            text: errors.townCity
+          } if errors.townCity,
+          autocomplete: "address-level2"
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Postcode"
+          },
+          id: "postcode",
+          name: "postcode",
+          value: values.postcode,
+          classes: "govuk-input--width-10",
+          errorMessage: {
+            text: errors.postcode
+          } if errors.postcode,
+          autocomplete: "postal-code"
+        }) }}
+
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

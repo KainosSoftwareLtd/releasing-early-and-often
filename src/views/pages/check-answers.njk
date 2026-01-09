@@ -1,0 +1,86 @@
+{% extends "template.njk" %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block mainContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "/address"
+  }) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Check your answers before submitting your application</h1>
+
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: "Date of birth"
+            },
+            value: {
+              text: dateOfBirth.day + "/" + dateOfBirth.month + "/" + dateOfBirth.year
+            },
+            actions: {
+              items: [
+                {
+                  href: "/date-of-birth",
+                  text: "Change",
+                  visuallyHiddenText: "date of birth"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Previous UK passport"
+            },
+            value: {
+              text: "Yes" if previousPassport === "yes" else "No"
+            },
+            actions: {
+              items: [
+                {
+                  href: "/previous-passport",
+                  text: "Change",
+                  visuallyHiddenText: "previous passport"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Address"
+            },
+            value: {
+              html: address.addressLine1 + "<br>" + 
+                    (address.addressLine2 + "<br>" if address.addressLine2) + 
+                    address.townCity + "<br>" + 
+                    address.postcode
+            },
+            actions: {
+              items: [
+                {
+                  href: "/address",
+                  text: "Change",
+                  visuallyHiddenText: "address"
+                }
+              ]
+            }
+          }
+        ]
+      }) }}
+
+      <h2 class="govuk-heading-m">Now submit your application</h2>
+      <p class="govuk-body">By submitting this application you are confirming that, to the best of your knowledge, the details you are providing are correct.</p>
+
+      <form method="post">
+        {{ govukButton({
+          text: "Accept and submit"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
