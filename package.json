@@ -2,12 +2,12 @@
   "name": "release-early-web-app",
   "version": "1.0.0",
   "description": "UK Passport application training module for progressive delivery concepts",
-  "main": "src/app.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "mocha --require test/unit/helper test/unit/spec.*.js",
+    "test:watch": "mocha --require test/unit/helper test/unit/spec.*.js --watch"
   },
   "keywords": [
     "express",
@@ -24,8 +24,11 @@
     "govuk-frontend": "^4.7.0"
   },
   "devDependencies": {
-    "jest": "^29.7.0",
+    "chai": "^4.5.0",
+    "mocha": "^10.8.2",
     "nodemon": "^3.0.2",
-    "supertest": "^6.3.3"
+    "sinon": "^18.0.1",
+    "sinon-chai": "^3.7.0",
+    "supertest": "^7.1.3"
   }
 }

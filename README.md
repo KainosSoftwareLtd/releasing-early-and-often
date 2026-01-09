@@ -18,15 +18,16 @@ The application handles adult passport applications only (age 16+).
 - **Nunjucks** for server-side rendering
 - **GOV.UK Frontend** for styling and components
 - **express-session** for session storage (no database required)
-- **Jest** for unit testing
+- **Mocha** with **Chai** and **Sinon** for unit testing
 
 ## Project Structure
 
 ```
 release-early-web-app/
-├── config.json               # Configuration including feature flags
+├── app.js                   # Express application setup
+├── config/
+│   └── config.json          # Configuration including feature flags
 ├── src/
-│   ├── app.js               # Express application setup
 │   ├── routes/              # Route definitions
 │   ├── controllers/         # Request handlers
 │   ├── services/            # Business logic (validation)
@@ -34,7 +35,10 @@ release-early-web-app/
 │   │   ├── layout.njk       # Base layout with GOV.UK Frontend
 │   │   ├── template.njk     # Page template
 │   │   └── pages/           # Individual page templates
-│   └── __tests__/           # Unit tests
+├── test/
+│   └── unit/                # Mocha unit tests
+│       ├── helper.js        # Test setup (Chai, Sinon)
+│       └── spec.*.js        # Test files
 ├── package.json
 └── README.md
 ```
@@ -85,7 +89,7 @@ npm run test:watch
 
 ## Configuration
 
-The `config.json` file contains feature flags for future progressive delivery exercises:
+The `config/config.json` file contains feature flags for future progressive delivery exercises:
 
 ```json
 {
@@ -111,6 +115,12 @@ Unit tests include:
 - Validation service (date of birth, previous passport, address)
 - Controller logic (all form handlers)
 - Edge cases and error handling
+
+Tests use:
+- **Mocha** as the test runner
+- **Chai** for assertions
+- **Sinon** for stubs and spies
+- **Supertest** for HTTP testing (available but not yet used)
 
 ## Future Enhancements
 

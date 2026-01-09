@@ -1,7 +1,8 @@
+const sinon = require('sinon');
 const {
   getAddress,
   postAddress
-} = require('../../controllers/addressController');
+} = require('../../src/controllers/address-controller');
 
 describe('AddressController', () => {
   let req, res;
@@ -12,13 +13,13 @@ describe('AddressController', () => {
       body: {}
     };
     res = {
-      render: jest.fn(),
-      redirect: jest.fn()
+      render: sinon.stub(),
+      redirect: sinon.stub()
     };
   });
 
   describe('getAddress', () => {
-    test('should render address page with session data', () => {
+    it('should render address page with session data', () => {
       req.session.address = {
         addressLine1: '10 Downing Street',
         townCity: 'London',
@@ -27,7 +28,7 @@ describe('AddressController', () => {
       
       getAddress(req, res);
       
-      expect(res.render).toHaveBeenCalledWith('pages/address.njk', {
+      expect(res.render).to.have.been.calledWith('pages/address.njk', {
         pageTitle: 'Address details',
         values: req.session.address,
         errors: {}
@@ -36,7 +37,7 @@ describe('AddressController', () => {
   });
 
   describe('postAddress', () => {
-    test('should redirect to check answers on valid address', () => {
+    it('should redirect to check answers on valid address', () => {
       req.body = {
         addressLine1: '10 Downing Street',
         addressLine2: '',
@@ -46,11 +47,11 @@ describe('AddressController', () => {
       
       postAddress(req, res);
       
-      expect(req.session.address).toEqual(req.body);
-      expect(res.redirect).toHaveBeenCalledWith('/check-answers');
+      expect(req.session.address).to.deep.equal(req.body);
+      expect(res.redirect).to.have.been.calledWith('/check-answers');
     });
 
-    test('should redirect back with errors on missing required field', () => {
+    it('should redirect back with errors on missing required field', () => {
       req.body = {
         addressLine1: '',
         addressLine2: '',
@@ -60,12 +61,12 @@ describe('AddressController', () => {
       
       postAddress(req, res);
       
-      expect(req.session.errors).toBeDefined();
-      expect(req.session.errors.addressLine1).toBeDefined();
-      expect(res.redirect).toHaveBeenCalledWith('/address');
+      expect(req.session.errors).to.exist;
+      expect(req.session.errors.addressLine1).to.exist;
+      expect(res.redirect).to.have.been.calledWith('/address');
     });
 
-    test('should accept optional addressLine2', () => {
+    it('should accept optional addressLine2', () => {
       req.body = {
         addressLine1: '10 Downing Street',
         addressLine2: 'Westminster',
@@ -75,11 +76,11 @@ describe('AddressController', () => {
       
       postAddress(req, res);
       
-      expect(req.session.address.addressLine2).toBe('Westminster');
-      expect(res.redirect).toHaveBeenCalledWith('/check-answers');
+      expect(req.session.address.addressLine2).to.equal('Westminster');
+      expect(res.redirect).to.have.been.calledWith('/check-answers');
     });
 
-    test('should validate postcode format', () => {
+    it('should validate postcode format', () => {
       req.body = {
         addressLine1: '10 Downing Street',
         addressLine2: '',
@@ -89,8 +90,8 @@ describe('AddressController', () => {
       
       postAddress(req, res);
       
-      expect(req.session.errors.postcode).toBeDefined();
-      expect(res.redirect).toHaveBeenCalledWith('/address');
+      expect(req.session.errors.postcode).to.exist;
+      expect(res.redirect).to.have.been.calledWith('/address');
     });
   });
 });

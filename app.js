@@ -2,7 +2,7 @@ const express = require('express');
 const nunjucks = require('nunjucks');
 const session = require('express-session');
 const path = require('path');
-const routes = require('./routes');
+const routes = require('./src/routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,8 +32,8 @@ app.use(session({
 }));
 
 // Static files
-app.use('/assets', express.static(path.join(__dirname, '../node_modules/govuk-frontend/govuk/assets')));
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/assets', express.static(path.join(__dirname, 'node_modules/govuk-frontend/govuk/assets')));
+app.use('/public', express.static(path.join(__dirname, 'src/public')));
 
 // Routes
 app.use('/', routes);

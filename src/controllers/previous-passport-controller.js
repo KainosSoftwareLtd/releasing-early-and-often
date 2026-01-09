@@ -1,4 +1,4 @@
-const { validatePreviousPassport } = require('../services/validationService');
+const { validatePreviousPassport } = require('../services/validation-service');
 
 /**
  * GET /previous-passport

@@ -1,4 +1,4 @@
-const { validateDateOfBirth } = require('../services/validationService');
+const { validateDateOfBirth } = require('../services/validation-service');
 
 /**
  * GET /date-of-birth
