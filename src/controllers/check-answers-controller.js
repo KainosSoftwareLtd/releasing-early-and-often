@@ -9,7 +9,7 @@ function getCheckAnswers(req, res) {
     return res.redirect('/date-of-birth');
   }
   
-  res.render('pages/check-answers.njk', {
+  res.render('pages/check-answers.html', {
     pageTitle: 'Check your answers',
     dateOfBirth,
     previousPassport,

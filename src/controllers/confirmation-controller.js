@@ -6,7 +6,7 @@ function getConfirmation(req, res) {
   const sessionData = { ...req.session };
   req.session.destroy();
   
-  res.render('pages/confirmation.njk', {
+  res.render('pages/confirmation.html', {
     pageTitle: 'Application complete'
   });
 }

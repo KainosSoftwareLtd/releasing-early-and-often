@@ -25,10 +25,10 @@ describe('AddressController', () => {
         townCity: 'London',
         postcode: 'SW1A 2AA'
       };
-      
+
       getAddress(req, res);
-      
-      expect(res.render).to.have.been.calledWith('pages/address.njk', {
+
+      expect(res.render).to.have.been.calledWith('pages/address.html', {
         pageTitle: 'Address details',
         values: req.session.address,
         errors: {}
@@ -44,9 +44,9 @@ describe('AddressController', () => {
         townCity: 'London',
         postcode: 'SW1A 2AA'
       };
-      
+
       postAddress(req, res);
-      
+
       expect(req.session.address).to.deep.equal(req.body);
       expect(res.redirect).to.have.been.calledWith('/check-answers');
     });
@@ -58,9 +58,9 @@ describe('AddressController', () => {
         townCity: 'London',
         postcode: 'SW1A 2AA'
       };
-      
+
       postAddress(req, res);
-      
+
       expect(req.session.errors).to.exist;
       expect(req.session.errors.addressLine1).to.exist;
       expect(res.redirect).to.have.been.calledWith('/address');
@@ -73,9 +73,9 @@ describe('AddressController', () => {
         townCity: 'London',
         postcode: 'SW1A 2AA'
       };
-      
+
       postAddress(req, res);
-      
+
       expect(req.session.address.addressLine2).to.equal('Westminster');
       expect(res.redirect).to.have.been.calledWith('/check-answers');
     });
@@ -87,9 +87,9 @@ describe('AddressController', () => {
         townCity: 'London',
         postcode: 'INVALID'
       };
-      
+
       postAddress(req, res);
-      
+
       expect(req.session.errors.postcode).to.exist;
       expect(res.redirect).to.have.been.calledWith('/address');
     });
