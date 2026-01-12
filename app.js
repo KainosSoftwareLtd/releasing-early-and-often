@@ -9,8 +9,8 @@ const PORT = process.env.PORT || 3000;
 
 // Configure Nunjucks
 const nunjucksEnv = nunjucks.configure([
-  'src/views',
-  'node_modules/govuk-frontend/'
+  path.join(__dirname, 'src/views'),
+  path.join(__dirname, 'node_modules/govuk-frontend/dist')
 ], {
   autoescape: true,
   express: app,
@@ -31,9 +31,10 @@ app.use(session({
   cookie: { secure: false }
 }));
 
-// Static files
-app.use('/assets', express.static(path.join(__dirname, 'node_modules/govuk-frontend/govuk/assets')));
-app.use('/public', express.static(path.join(__dirname, 'src/public')));
+// Static files - serve GOV.UK Frontend assets
+// The precompiled CSS references /assets/* paths, so we mount assets directory there
+app.use('/assets', express.static(path.join(__dirname, 'node_modules/govuk-frontend/dist/govuk/assets')));
+app.use('/govuk', express.static(path.join(__dirname, 'node_modules/govuk-frontend/dist/govuk')));
 
 // Routes
 app.use('/', routes);
