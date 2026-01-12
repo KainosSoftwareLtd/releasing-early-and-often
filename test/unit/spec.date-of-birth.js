@@ -2,7 +2,7 @@ const sinon = require('sinon');
 const {
   getDateOfBirth,
   postDateOfBirth
-} = require('../../src/controllers/date-of-birth-controller');
+} = require('../../src/controllers/date-of-birth');
 
 describe('DateOfBirthController', () => {
   let req, res;

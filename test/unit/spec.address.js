@@ -2,7 +2,7 @@ const sinon = require('sinon');
 const {
   getAddress,
   postAddress
-} = require('../../src/controllers/address-controller');
+} = require('../../src/controllers/address');
 
 describe('AddressController', () => {
   let req, res;

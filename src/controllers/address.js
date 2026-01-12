@@ -1,4 +1,4 @@
-const { validateAddress } = require('../services/validation-service');
+const { validateAddress } = require('../services/validation');
 
 /**
  * GET /address

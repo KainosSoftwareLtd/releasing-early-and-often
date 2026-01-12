@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const dateOfBirthController = require('../controllers/date-of-birth-controller');
-const previousPassportController = require('../controllers/previous-passport-controller');
-const addressController = require('../controllers/address-controller');
-const checkAnswersController = require('../controllers/check-answers-controller');
-const confirmationController = require('../controllers/confirmation-controller');
+const dateOfBirthController = require('../controllers/date-of-birth');
+const previousPassportController = require('../controllers/previous-passport');
+const addressController = require('../controllers/address');
+const checkAnswersController = require('../controllers/check-answers');
+const confirmationController = require('../controllers/confirmation');
 
 // Home - redirect to start
 router.get('/', (req, res) => {

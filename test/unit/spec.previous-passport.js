@@ -2,7 +2,7 @@ const sinon = require('sinon');
 const {
   getPreviousPassport,
   postPreviousPassport
-} = require('../../src/controllers/previous-passport-controller');
+} = require('../../src/controllers/previous-passport');
 
 describe('PreviousPassportController', () => {
   let req, res;

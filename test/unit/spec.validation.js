@@ -2,7 +2,7 @@ const {
   validateDateOfBirth,
   validatePreviousPassport,
   validateAddress
-} = require('../../src/services/validation-service');
+} = require('../../src/services/validation');
 
 describe('ValidationService', () => {
   describe('validateDateOfBirth', () => {
