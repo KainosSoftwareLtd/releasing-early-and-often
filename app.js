@@ -36,6 +36,9 @@ app.use(session({
 app.use('/assets', express.static(path.join(__dirname, 'node_modules/govuk-frontend/dist/govuk/assets')));
 app.use('/govuk', express.static(path.join(__dirname, 'node_modules/govuk-frontend/dist/govuk')));
 
+// Serve application static files (JS, CSS, images, etc.)
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Routes
 app.use('/', routes);
 
