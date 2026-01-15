@@ -1,5 +1,9 @@
 {
   "featureFlags": {
-    "enabledChildRenewals": false
+    "enabledChildRenewals": false,
+    "enableBackendServiceCalls": true
+  },
+  "backend": {
+    "apiUrl": "http://localhost:8080/api"
   }
 }
