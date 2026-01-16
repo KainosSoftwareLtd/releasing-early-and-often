@@ -8,7 +8,9 @@ This training module demonstrates:
 - A basic GOV.UK-style application flow
 - Session-based form handling
 - Server-side validation
-- Progressive delivery foundation (feature flags configuration included for future use)
+- API integration with backend services
+- Feature flags for progressive delivery
+- Quick fill functionality for testing and development
 
 The application handles adult passport applications only (age 16+).
 
@@ -18,6 +20,7 @@ The application handles adult passport applications only (age 16+).
 - **Nunjucks** for server-side rendering
 - **GOV.UK Frontend** for styling and components
 - **express-session** for session storage (no database required)
+- **Axios** for HTTP client (backend API calls)
 - **Mocha** with **Chai** and **Sinon** for unit testing
 
 ## Project Structure
@@ -27,6 +30,9 @@ release-early-web-app/
 ├── app.js                   # Express application setup
 ├── config/
 │   └── config.json          # Configuration including feature flags
+├── public/                  # Static assets
+│   ├── css/                 # Custom CSS files
+│   └── js/                  # Client-side JavaScript
 ├── src/
 │   ├── routes/              # Route definitions
 │   ├── controllers/         # Request handlers
@@ -51,7 +57,29 @@ The application implements the following pages:
 2. **Previous UK Passport** - Yes/No radio buttons
 3. **Address Details** - Address form with validation
 4. **Check Your Answers** - Summary page with change links
-5. **Application Complete** - Confirmation screen
+5. **Application Complete** - Confirmation screen with reference number
+
+## Quick Fill Feature
+
+For testing and development purposes, every page includes a "Fill" button that:
+- Populates all form fields with realistic dummy data
+- Automatically proceeds to the next page
+- Can be activated by clicking the blue "Fill" button (top right) or pressing **ESC** key
+
+A tooltip appears on the first page explaining this functionality (auto-dismisses after 5 seconds).
+
+## Backend Integration
+
+The application integrates with a Spring Boot backend service to:
+- Create new passport applications
+- Generate unique reference numbers (UUIDs)
+- Store application data persistently
+
+### Backend Service
+The companion backend service is available at: `../passport-backend/`
+- **Default URL**: `http://localhost:8080/api`
+- **Endpoint**: `POST /applications`
+- **Documentation**: Swagger UI at `http://localhost:8080/swagger-ui.html`
 
 ## How to Run
 
@@ -89,24 +117,42 @@ npm run test:watch
 
 ## Configuration
 
-The `config/config.json` file contains feature flags for future progressive delivery exercises:
+The `config/config.json` file contains feature flags and backend settings:
 
 ```json
 {
   "featureFlags": {
-    "enabledChildRenewals": false
+    "enabledChildRenewals": false,
+    "enableBackendServiceCalls": true
+  },
+  "backend": {
+    "apiUrl": "http://localhost:8080/api"
   }
 }
 ```
 
-**Note:** Feature flag functionality is not yet implemented - the configuration is included for future training modules.
+### Feature Flags
+
+- **`enableBackendServiceCalls`**: Controls whether the application makes real API calls to the backend
+  - `true`: Makes HTTP requests to backend service, uses real UUIDs as reference numbers
+  - `false`: Generates fake reference numbers locally (format: `REF-XXXXXXXXX`)
+  - **Fallback**: If backend call fails, generates temporary reference number (format: `TEMP-XXXXXXXXX`)
+
+- **`enabledChildRenewals`**: Placeholder for future functionality
+
+### Backend Configuration
+
+- **`apiUrl`**: Base URL for the backend REST API
+- Easily configurable for different environments (development, staging, production)
 
 ## Development Notes
 
 - Controllers are separated from routes for testability
 - Validation logic is in the services layer
-- All user data is stored in express-session (memory)
-- No database is required
+- All user data is stored in express-session (memory) and sent to backend API
+- Backend integration uses configurable feature flags
+- Quick fill functionality for rapid testing and development
+- Static assets (CSS/JS) served from `public/` directory
 - GOV.UK Frontend components are used throughout
 
 ## Testing Coverage
@@ -114,21 +160,26 @@ The `config/config.json` file contains feature flags for future progressive deli
 Unit tests include:
 - Validation service (date of birth, previous passport, address)
 - Controller logic (all form handlers)
+- API integration (backend service calls)
+- Feature flag functionality
 - Edge cases and error handling
 
 Tests use:
 - **Mocha** as the test runner
 - **Chai** for assertions
-- **Sinon** for stubs and spies
+- **Sinon** for stubs and spies (including axios mocking)
 - **Supertest** for HTTP testing (available but not yet used)
 
 ## Future Enhancements
 
 This is a training module. Future iterations will cover:
-- Feature flag implementation
+- Advanced feature flag implementation
 - A/B testing scenarios
 - Progressive rollout strategies
 - Canary deployments
+- Database integration
+- Enhanced API error handling
+- User authentication and authorization
 
 ## License
 
