@@ -38,15 +38,7 @@ function validateDateOfBirth(date) {
     return { isValid: false, errors };
   }
 
-  // Check if 16 or older
-  const today = new Date();
-  const age = today.getFullYear() - year - 
-    (today.getMonth() < month - 1 || (today.getMonth() === month - 1 && today.getDate() < day) ? 1 : 0);
-  
-  if (age < 16) {
-    errors.push('You must be 16 or older to apply for an adult passport');
-    return { isValid: false, errors };
-  }
+  // No age restriction validation here; controller handles under-16 logic
 
   return { isValid: true, errors: [], date: dateObj };
 }

@@ -15,6 +15,10 @@ router.get('/', (req, res) => {
 router.get('/date-of-birth', dateOfBirthController.getDateOfBirth);
 router.post('/date-of-birth', dateOfBirthController.postDateOfBirth);
 
+// Child unavailable route
+const childController = require('../controllers/child');
+router.get('/child-unavailable', childController.getChildUnavailable);
+
 // Previous UK Passport
 router.get('/previous-passport', previousPassportController.getPreviousPassport);
 router.post('/previous-passport', previousPassportController.postPreviousPassport);
