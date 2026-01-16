@@ -1,7 +1,19 @@
 {% extends "template.njk" %}
 
+{% set backHref = "/date-of-birth" %}
+
 {% block mainContent %}
-  <h1 class="govuk-heading-l">Service Unavailable</h1>
-  <p>Sorry, this service is unavailable for child applications at this time.</p>
-  <a href="/date-of-birth" class="govuk-button">Back</a>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">You cannot use this service</h1>
+      
+      <p class="govuk-body">
+        This service is not yet available for children under 16.
+      </p>
+
+      <p class="govuk-body">
+        <a href="/" class="govuk-link">Go back to start</a>
+      </p>
+    </div>
+  </div>
 {% endblock %}

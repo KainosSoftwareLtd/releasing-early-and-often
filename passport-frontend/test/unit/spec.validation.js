@@ -3,6 +3,7 @@ const {
   validatePreviousPassport,
   validateAddress
 } = require('../../src/services/validation');
+const sinon = require('sinon');
 
 describe('ValidationService', () => {
   describe('validateDateOfBirth', () => {
@@ -28,7 +29,7 @@ describe('ValidationService', () => {
       expect(result.errors).to.include('Enter your date of birth');
     });
 
-    it('should return valid for person under 16', () => {
+    it('should return valid for person under 16 and mark eligibility metadata', () => {
       const today = new Date();
       const recentYear = today.getFullYear() - 10;
       const date = {
@@ -39,6 +40,24 @@ describe('ValidationService', () => {
       const result = validateDateOfBirth(date);
       expect(result.isValid).to.equal(true);
       expect(result.errors).to.deep.equal([]);
+      expect(result.isUnder16).to.equal(true);
+    });
+
+    it('should return valid for adult date with isUnder16 false', () => {
+      const date = { day: '31', month: '12', year: '2000' };
+      const result = validateDateOfBirth(date);
+      expect(result.isValid).to.equal(true);
+      expect(result.isUnder16).to.equal(false);
+    });
+
+    it('should mark under16 when birthday is later this month', () => {
+      const clock = sinon.useFakeTimers(new Date('2026-06-10T12:00:00Z'));
+      const date = { day: '20', month: '6', year: '2010' };
+      const result = validateDateOfBirth(date);
+
+      expect(result.isValid).to.equal(true);
+      expect(result.isUnder16).to.equal(true);
+      clock.restore();
     });
 
     it('should return invalid for invalid date', () => {
@@ -58,6 +77,35 @@ describe('ValidationService', () => {
         month: '1',
         year: '2000'
       };
+      const result = validateDateOfBirth(date);
+      expect(result.isValid).to.equal(false);
+      expect(result.errors).to.include('Date of birth must be a real date');
+    });
+
+    it('should return invalid for a future year', () => {
+      const nextYear = (new Date().getFullYear() + 1).toString();
+      const date = { day: '1', month: '1', year: nextYear };
+      const result = validateDateOfBirth(date);
+      expect(result.isValid).to.equal(false);
+      expect(result.errors).to.include('Date of birth must be a real date');
+    });
+
+    it('should return invalid when day is out of range (<1)', () => {
+      const date = { day: '0', month: '1', year: '2000' };
+      const result = validateDateOfBirth(date);
+      expect(result.isValid).to.equal(false);
+      expect(result.errors).to.include('Date of birth must be a real date');
+    });
+
+    it('should return invalid when month is out of range (>12)', () => {
+      const date = { day: '1', month: '13', year: '2000' };
+      const result = validateDateOfBirth(date);
+      expect(result.isValid).to.equal(false);
+      expect(result.errors).to.include('Date of birth must be a real date');
+    });
+
+    it('should return invalid when year is below minimum (before 1900)', () => {
+      const date = { day: '1', month: '1', year: '1899' };
       const result = validateDateOfBirth(date);
       expect(result.isValid).to.equal(false);
       expect(result.errors).to.include('Date of birth must be a real date');

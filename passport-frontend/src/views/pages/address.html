@@ -1,15 +1,12 @@
 {% extends "template.njk" %}
 
+{% set backHref = "/previous-passport" %}
+
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% block mainContent %}
-  {{ govukBackLink({
-    text: "Back",
-    href: "/previous-passport"
-  }) }}
 
   {% if errors.addressLine1 or errors.townCity or errors.postcode %}
     {{ govukErrorSummary({

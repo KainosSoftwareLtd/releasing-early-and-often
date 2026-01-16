@@ -28,18 +28,14 @@ function postDateOfBirth(req, res) {
   req.session.dateOfBirth = { day, month, year };
   delete req.session.errors;
 
-  // Check for child age (under 16)
-  const d = parseInt(day, 10);
-  const m = parseInt(month, 10);
-  const y = parseInt(year, 10);
-  const today = new Date();
-  let age = today.getFullYear() - y;
-  const mm = today.getMonth() - (m - 1);
-  if (mm < 0 || (mm === 0 && today.getDate() < d)) {
-    age--;
-  }
-  if (age < 16) {
-    return res.redirect('/child-unavailable');
+  const config = require('../../config/config.json');
+
+  if (validation.isUnder16) {
+    if (config.featureFlags.enableChildRenewals) {
+      return res.redirect('/parents-details');
+    } else {
+      return res.redirect('/child-unavailable');
+    }
   }
 
   res.redirect('/previous-passport');

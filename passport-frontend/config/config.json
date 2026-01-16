@@ -1,6 +1,6 @@
 {
   "featureFlags": {
-    "enabledChildRenewals": false,
+    "enableChildRenewals": true,
     "enableBackendServiceCalls": true
   },
   "backend": {

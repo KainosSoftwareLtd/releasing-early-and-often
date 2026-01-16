@@ -19,7 +19,7 @@ describe('PreviousPassportController', () => {
   });
 
   describe('getPreviousPassport', () => {
-    it('should render previous passport page', () => {
+    it('should render previous passport page with back link to date of birth for adult applications', () => {
       req.session.previousPassport = 'yes';
 
       getPreviousPassport(req, res);
@@ -27,7 +27,39 @@ describe('PreviousPassportController', () => {
       expect(res.render).to.have.been.calledWith('pages/previous-passport.html', {
         pageTitle: 'Previous UK passport',
         value: 'yes',
-        error: undefined
+        error: undefined,
+        backHref: '/date-of-birth'
+      });
+    });
+
+    it('should render previous passport page with back link to parents details for child applications', () => {
+      req.session.previousPassport = 'yes';
+      req.session.parentsDetails = {
+        parent1FullName: 'John Doe',
+        parent1Contact: 'john@example.com'
+      };
+
+      getPreviousPassport(req, res);
+
+      expect(res.render).to.have.been.calledWith('pages/previous-passport.html', {
+        pageTitle: 'Previous UK passport',
+        value: 'yes',
+        error: undefined,
+        backHref: '/parents-details'
+      });
+    });
+
+    it('should render with error when errors exist', () => {
+      req.session.previousPassport = '';
+      req.session.errors = { previousPassport: 'Select an option' };
+
+      getPreviousPassport(req, res);
+
+      expect(res.render).to.have.been.calledWith('pages/previous-passport.html', {
+        pageTitle: 'Previous UK passport',
+        value: '',
+        error: 'Select an option',
+        backHref: '/date-of-birth'
       });
     });
   });

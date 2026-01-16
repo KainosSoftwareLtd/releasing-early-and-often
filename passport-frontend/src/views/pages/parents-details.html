@@ -1,0 +1,84 @@
+{% extends "template.njk" %}
+
+{% set backHref = "/date-of-birth" %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% block mainContent %}
+  {% if errors.parent1FullName or errors.parent1Contact or errors.parent2FullName or errors.parent2Contact %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: errors.parent1FullName,
+          href: "#parent1FullName"
+        } if errors.parent1FullName,
+        {
+          text: errors.parent1Contact,
+          href: "#parent1Contact"
+        } if errors.parent1Contact,
+        {
+          text: errors.parent2FullName,
+          href: "#parent2FullName"
+        } if errors.parent2FullName,
+        {
+          text: errors.parent2Contact,
+          href: "#parent2Contact"
+        } if errors.parent2Contact
+      ]
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Parent or guardian details</h1>
+      <p class="govuk-body">Enter as many details as you can, giving parents' current names.</p>
+
+      <form method="post" novalidate>
+        <h2 class="govuk-heading-m">Mother or parent 1</h2>
+
+        {{ govukInput({
+          label: { text: "Full name" },
+          id: "parent1FullName",
+          name: "parent1FullName",
+          value: values.parent1FullName,
+          errorMessage: { text: errors.parent1FullName } if errors.parent1FullName,
+          autocomplete: "name"
+        }) }}
+
+        {{ govukInput({
+          label: { text: "Email" },
+          id: "parent1Contact",
+          name: "parent1Contact",
+          value: values.parent1Contact,
+          errorMessage: { text: errors.parent1Contact } if errors.parent1Contact,
+          autocomplete: "email"
+        }) }}
+
+        <h2 class="govuk-heading-m">Father or parent 2 (optional)</h2>
+
+        {{ govukInput({
+          label: { text: "Full name" },
+          id: "parent2FullName",
+          name: "parent2FullName",
+          value: values.parent2FullName,
+          errorMessage: { text: errors.parent2FullName } if errors.parent2FullName,
+          autocomplete: "name"
+        }) }}
+
+        {{ govukInput({
+          label: { text: "Email" },
+          id: "parent2Contact",
+          name: "parent2Contact",
+          value: values.parent2Contact,
+          errorMessage: { text: errors.parent2Contact } if errors.parent2Contact,
+          autocomplete: "email"
+        }) }}
+
+        {{ govukButton({ text: "Continue" }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
