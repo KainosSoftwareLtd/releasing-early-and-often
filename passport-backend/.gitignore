@@ -1,0 +1,105 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Package Files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Virtual machine crash logs
+hs_err_pid*
+
+# IDE Files
+## IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+## Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+## NetBeans
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+## VS Code
+.vscode/
+*.code-workspace
+
+# OS Files
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+## Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+## Linux
+*~
+
+# Spring Boot
+### Spring Boot application properties (if they contain sensitive data)
+# application-local.properties
+# application-dev.properties
+# application-prod.properties
+
+# H2 Database files (if using H2)
+*.db
+*.h2.db
+*.trace.db
+
+# Logs
+logs/
+spring.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Security
+.env
+*.p12
+*.jks
+
+# Test output
+/test-output/
+
+# JUnit
+junit*.properties
