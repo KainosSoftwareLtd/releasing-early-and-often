@@ -42,7 +42,6 @@ public class PassportApplication {
     private String postcode;
 
     public PassportApplication() {
-        this.id = UUID.randomUUID();
         this.status = ApplicationStatus.IN_PROGRESS;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
