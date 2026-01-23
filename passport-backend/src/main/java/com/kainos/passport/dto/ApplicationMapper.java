@@ -1,7 +1,7 @@
 package com.kainos.passport.dto;
 
-import com.kainos.passport.dto.applicationV1.ApplicationResponseV1;
 import com.kainos.passport.dto.applicationV1.CreateApplicationRequestV1;
+import com.kainos.passport.dto.applicationV1.ApplicationResponseV1;
 import com.kainos.passport.entity.PassportApplication;
 import org.springframework.stereotype.Component;
 
@@ -24,10 +24,20 @@ public class ApplicationMapper {
 
     // Map entity to V1 response
     public ApplicationResponseV1 toV1(PassportApplication application) {
+        ApplicationResponseV1.ApplicationData appData = ApplicationResponseV1.ApplicationData.builder()
+                .dateOfBirth(application.getDateOfBirth())
+                .previousPassport(application.getPreviousPassport())
+                .addressLine1(application.getAddressLine1())
+                .addressLine2(application.getAddressLine2())
+                .townCity(application.getTownCity())
+                .postcode(application.getPostcode())
+                .build();
+
         return ApplicationResponseV1.builder()
                 .applicationId(application.getId())
                 .status(application.getStatus().toString())
                 .createdAt(application.getCreatedAt())
+                .application(appData)
                 .build();
     }
 }
