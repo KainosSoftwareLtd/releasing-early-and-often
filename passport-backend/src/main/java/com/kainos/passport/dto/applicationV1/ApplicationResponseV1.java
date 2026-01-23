@@ -1,4 +1,4 @@
-package com.kainos.passport.dto;
+package com.kainos.passport.dto.applicationV1;
 
 import lombok.*;
 
@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @ToString
-public class ApplicationResponse {
+public class ApplicationResponseV1 {
 
     private UUID applicationId;
     private String status;

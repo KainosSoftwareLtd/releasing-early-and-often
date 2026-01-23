@@ -1,4 +1,4 @@
-package com.kainos.passport.dto;
+package com.kainos.passport.dto.applicationV1;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class CreateApplicationRequest {
+public class CreateApplicationRequestV1 {
 
     @NotBlank(message = "Date of birth is required")
     private String dateOfBirth;
