@@ -47,7 +47,8 @@ async function postCheckAnswers(req, res) {
 
       const response = await axios.post(`${config.backend.apiUrl}/applications`, payload, {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-API-Version': '1.0'
         },
         timeout: 5000
       });

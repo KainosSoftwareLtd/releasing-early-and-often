@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping
 @CrossOrigin(origins = "http://localhost:3000")
 @Tag(name = "Passport Applications", description = "API for managing passport applications")
 public class PassportApplicationController {
@@ -30,7 +30,7 @@ public class PassportApplicationController {
         @ApiResponse(responseCode = "400", description = "Invalid input data"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PostMapping("/applications")
+    @PostMapping(path = "/applications", version = "1.0")
     public ResponseEntity<ApplicationResponse> createApplication(@Valid @RequestBody CreateApplicationRequest request) {
         try {
             PassportApplication application = applicationService.createApplication(request);

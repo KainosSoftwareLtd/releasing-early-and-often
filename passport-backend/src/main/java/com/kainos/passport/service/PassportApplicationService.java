@@ -15,7 +15,11 @@ public class PassportApplicationService {
     public PassportApplication createApplication(CreateApplicationRequest request) {
         PassportApplication application = new PassportApplication();
 
-        // Set the provided fields
+        // System fields
+        application.setCreatedAt(java.time.LocalDateTime.now());
+        application.setStatus(PassportApplication.ApplicationStatus.IN_PROGRESS);
+
+        // Set the provided fields - from frontend service (if DB schema changes, you may need to update this)
         application.setDateOfBirth(request.getDateOfBirth());
         application.setPreviousPassport(request.getPreviousPassport());
         application.setAddressLine1(request.getAddressLine1());
