@@ -17,7 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
             //.useQueryParam("version")                                         // Query parameter-based
             //.useMediaTypeParameter(MediaType.APPLICATION_JSON, "version");    // Media type
         configurer.useRequestHeader("X-API-Version");                           // Header-based -> Our selected approach
-        configurer.addSupportedVersions("1.0");
+        configurer.addSupportedVersions("1.0", "2.0");
         configurer.setDefaultVersion("1.0");
         configurer.setVersionParser(new ApiVersionParser());
 	}

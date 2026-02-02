@@ -57,4 +57,17 @@ public class PassportApplication {
         this.status = status;
         this.updatedAt = LocalDateTime.now();
     }
+
+    // Parent details (v2 API fields)
+    @Column(name = "parent1_full_name")
+    private String parent1FullName;
+
+    @Column(name = "parent1_contact")
+    private String parent1Contact;
+
+    @Column(name = "parent2_full_name")
+    private String parent2FullName;
+
+    @Column(name = "parent2_contact")
+    private String parent2Contact;
 }

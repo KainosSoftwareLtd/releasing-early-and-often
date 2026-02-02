@@ -25,7 +25,8 @@ A Spring Boot REST API for the UK Passport Application system.
 ### API Documentation
 
 - **Swagger UI**: `http://localhost:8080/swagger-ui.html`
-- **OpenAPI JSON**: `http://localhost:8080/v3/api-docs`
+- **OpenAPI JSON**: `http://localhost:8080/v3/api-docs/v1.0`
+- **OpenAPI JSON**: `http://localhost:8080/v3/api-docs/v2.0`
 
 ### API Endpoints
 
@@ -35,9 +36,21 @@ A Spring Boot REST API for the UK Passport Application system.
 - **Response**:
   ```json
   {
-    "applicationId": "uuid-string",
+    "applicationId": "c4fe340f-d1a4-483f-8081-856e26a2242e",
     "status": "IN_PROGRESS",
-    "createdAt": "2026-01-15T10:30:00"
+    "createdAt": "2026-01-28T20:44:26.463905",
+    "application": {
+      "dateOfBirth": "2015-06-15",
+      "previousPassport": "yes",
+      "addressLine1": "123 Main Street",
+      "addressLine2": "Apartment 4B",
+      "townCity": "London",
+      "postcode": "SW1A 1AA",
+      "parent1FullName": "Jane Smith",
+      "parent1Contact": "jane.smith@example.com",
+      "parent2FullName": "John Smith",
+      "parent2Contact": "john.smith@example.com"
+    }
   }
   ```
 
