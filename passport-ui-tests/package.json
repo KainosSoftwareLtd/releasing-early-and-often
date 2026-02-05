@@ -1,0 +1,23 @@
+{
+  "name": "passport-ui-tests",
+  "version": "1.0.0",
+  "description": "Selenium UI test pack for Passport Application",
+  "scripts": {
+    "test": "mocha --timeout 30000 'tests/**/*.test.js'",
+    "test:headless": "HEADLESS=true mocha --timeout 30000 'tests/**/*.test.js'",
+    "test:specific": "mocha --timeout 30000"
+  },
+  "keywords": [
+    "selenium",
+    "ui-tests",
+    "e2e",
+    "passport"
+  ],
+  "author": "Kainos",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
+    "selenium-webdriver": "^4.27.0"
+  }
+}
