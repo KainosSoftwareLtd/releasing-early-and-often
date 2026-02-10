@@ -49,7 +49,61 @@ The application uses an in-memory H2 database for development.
 - **Username**: `sa`
 - **Password**: `password`
 
-### Testing
+### Database Migrations
+
+This project uses [Flyway](https://flywaydb.org/) for database schema migrations. Migrations run automatically on application startup.
+
+#### Migration Files
+
+Migration scripts are located in `src/main/resources/db/migration/` and follow the naming convention:
+
+```
+V{version}__{description}.sql
+```
+
+For example: `V1__create_passport_applications_table.sql`
+
+#### Adding a New Migration
+
+1. Create a new SQL file in `src/main/resources/db/migration/`
+2. Name it with the next version number (e.g., `V2__add_new_column.sql`)
+3. Write your SQL migration script using PostgreSQL-compatible syntax
+4. Restart the application - the migration will run automatically
+
+#### Important Notes
+
+- Migrations are versioned and run in order
+- Once applied, migration files should **never** be modified
+- The H2 database runs in PostgreSQL compatibility mode, so use PostgreSQL-compatible SQL
+- Migration history is tracked in the `flyway_schema_history` table
+
+### Unit Tests
+
+The project includes comprehensive unit and integration tests using JUnit 5, Mockito, and AssertJ.
+
+#### Running Tests
+
+```bash
+mvn test
+```
+
+#### Test Structure
+
+| Test Class | Description |
+|------------|-------------|
+| `PassportApplicationServiceTest` | Unit tests for service layer logic |
+| `PassportApplicationControllerTest` | Unit tests for controller response handling |
+| `ApplicationMapperTest` | Unit tests for DTO mapping |
+| `PassportApplicationIntegrationTest` | Integration tests with full Spring context and database |
+
+#### Test Coverage
+
+- **Service Layer**: Application creation, status setting, timestamp handling
+- **Controller Layer**: HTTP response codes, error handling, request validation
+- **Mapper**: Request-to-entity and entity-to-response transformations
+- **Integration**: End-to-end flow with database persistence
+
+### Manual Testing
 
 You can test the API using curl:
 
