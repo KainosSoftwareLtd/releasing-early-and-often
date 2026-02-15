@@ -2,8 +2,8 @@ package com.kainos.passport.controller;
 
 import com.kainos.passport.dto.ApplicationMapper;
 import com.kainos.passport.dto.applicationV1.ApplicationResponseV1;
-import com.kainos.passport.dto.applicationV2.ApplicationResponseV2;
 import com.kainos.passport.dto.applicationV1.CreateApplicationRequestV1;
+import com.kainos.passport.dto.applicationV2.ApplicationResponseV2;
 import com.kainos.passport.dto.applicationV2.CreateApplicationRequestV2;
 import com.kainos.passport.entity.PassportApplication;
 import com.kainos.passport.service.PassportApplicationService;

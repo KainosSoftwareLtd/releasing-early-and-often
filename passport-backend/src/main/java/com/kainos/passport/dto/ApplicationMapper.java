@@ -1,9 +1,9 @@
 package com.kainos.passport.dto;
 
-import com.kainos.passport.dto.applicationV1.ApplicationResponseV1;
 import com.kainos.passport.dto.applicationV1.CreateApplicationRequestV1;
 import com.kainos.passport.dto.applicationV2.ApplicationResponseV2;
 import com.kainos.passport.dto.applicationV2.CreateApplicationRequestV2;
+import com.kainos.passport.dto.applicationV1.ApplicationResponseV1;
 import com.kainos.passport.entity.PassportApplication;
 import org.springframework.stereotype.Component;
 
