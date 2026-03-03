@@ -4,6 +4,11 @@
 # CONFIGURATION
 ###############################################
 
+# Versions
+NODE_VERSION=24.13.0
+
+JAVA_VERSION=21.0.9-amzn
+
 # Directories relative to where this script is located
 NODE_PROJECT_DIRS=(
   "/passport-frontend"
@@ -40,9 +45,9 @@ echo "✔️ nvm loaded"
 # Install latest Node version & set default
 ###############################################
 
-echo "⬇️ Installing Node 24.13.0..."
-nvm install 24.13.0
-nvm alias default 24.13.0
+echo "⬇️ Installing Node $NODE_VERSION..."
+nvm install $NODE_VERSION
+nvm alias default $NODE_VERSION
 nvm use default
 
 echo "✔️ Node version set to default: $(node -v)"
@@ -60,11 +65,11 @@ source "$HOME/.sdkman/bin/sdkman-init.sh"
 echo "✔️ SDKMAN loaded"
 
 ###############################################
-# Install Java 21
+# Install Java
 ###############################################
-echo "⬇️ Installing latest Java 21..."
-sdk install java 21.0.9-amzn
-sdk default java 21.0.9-amzn
+echo "⬇️ Installing latest Java $JAVA_VERSION..."
+sdk install java $JAVA_VERSION
+sdk default java $JAVA_VERSION
 
 echo "✔️ Java version set to: $(java -version 2>&1 | head -1)"
 
@@ -72,9 +77,9 @@ echo "✔️ Java version set to: $(java -version 2>&1 | head -1)"
 export JAVA_HOME="$SDKMAN_CANDIDATES_DIR/java/current"
 export PATH="$JAVA_HOME/bin:$PATH"
 
-echo "✔️ Java 21 active: $(java -version 2>&1 | head -1)"
+echo "✔️ Java $JAVA_VERSION active: $(java -version 2>&1 | head -1)"
 
-echo "🔧 Ensuring Maven uses Java 21:"
+echo "🔧 Ensuring Maven uses Java $JAVA_VERSION:"
 mvn -version
 
 ###############################################

@@ -31,7 +31,7 @@ Run setup script
 ./install.sh
 ```
 
-This will use NVM & SDKman to install versions of node and java to use for this project and then run nvm install & maven install to get them up and running.
+This will use NVM & SDKman to install versions of node and java to use for this project, set them to the default and then run nvm install & maven install to get them up and running.
 
 ## Common issues
 If on your project you connect to other repositories using node you might need to run the below command to clean out your cache:
