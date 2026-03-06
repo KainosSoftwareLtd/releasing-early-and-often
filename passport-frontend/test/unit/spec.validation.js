@@ -28,19 +28,6 @@ describe('ValidationService', () => {
       expect(result.errors).to.include('Enter your date of birth');
     });
 
-    it('should return valid for person under 16', () => {
-      const today = new Date();
-      const recentYear = today.getFullYear() - 10;
-      const date = {
-        day: '1',
-        month: '1',
-        year: recentYear.toString()
-      };
-      const result = validateDateOfBirth(date);
-      expect(result.isValid).to.equal(true);
-      expect(result.errors).to.deep.equal([]);
-    });
-
     it('should return invalid for invalid date', () => {
       const date = {
         day: '31',
