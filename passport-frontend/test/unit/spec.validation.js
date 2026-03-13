@@ -28,7 +28,7 @@ describe('ValidationService', () => {
       expect(result.errors).to.include('Enter your date of birth');
     });
 
-    it('should return invalid for person under 16', () => {
+    it('should return valid for person under 16', () => {
       const today = new Date();
       const recentYear = today.getFullYear() - 10;
       const date = {
@@ -37,8 +37,8 @@ describe('ValidationService', () => {
         year: recentYear.toString()
       };
       const result = validateDateOfBirth(date);
-      expect(result.isValid).to.equal(false);
-      expect(result.errors).to.include('You must be 16 or older to apply for an adult passport');
+      expect(result.isValid).to.equal(true);
+      expect(result.errors).to.deep.equal([]);
     });
 
     it('should return invalid for invalid date', () => {

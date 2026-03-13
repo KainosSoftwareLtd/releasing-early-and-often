@@ -68,8 +68,7 @@ describe('DateOfBirthController', () => {
 
       postDateOfBirth(req, res);
 
-      expect(req.session.errors.dateOfBirth).to.include('16 or older');
-      expect(res.redirect).to.have.been.calledWith('/date-of-birth');
+      expect(res.redirect).to.have.been.calledWith('/child-unavailable');
     });
   });
 });

@@ -26,7 +26,7 @@ function validateDateOfBirth(date) {
     return { isValid: false, errors };
   }
 
-  // Age eligibility is enforced in the date-of-birth controller, not in this validator.
+  // Age eligibility is enforced in the date-of-birth controller.
   return { isValid: true, errors: [], date: dateObj };
 }
 
