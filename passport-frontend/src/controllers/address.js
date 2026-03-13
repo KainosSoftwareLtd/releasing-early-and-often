@@ -1,8 +1,6 @@
 const { validateAddress } = require('../services/validation');
 
-/**
- * GET /address
- */
+
 function getAddress(req, res) {
   const sessionData = req.session.address || {};
 
@@ -15,9 +13,7 @@ function getAddress(req, res) {
   delete req.session.errors;
 }
 
-/**
- * POST /address
- */
+
 function postAddress(req, res) {
   const { addressLine1, addressLine2, townCity, postcode } = req.body;
 

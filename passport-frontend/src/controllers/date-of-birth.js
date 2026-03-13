@@ -1,8 +1,6 @@
 const { validateDateOfBirth } = require('../services/validation');
 
-/**
- * GET /date-of-birth
- */
+
 function getDateOfBirth(req, res) {
   const sessionData = req.session.dateOfBirth || {};
 
@@ -12,13 +10,9 @@ function getDateOfBirth(req, res) {
     errors: req.session.errors || {}
   });
 
-  // Clear errors after displaying
   delete req.session.errors;
 }
 
-/**
- * POST /date-of-birth
- */
 function postDateOfBirth(req, res) {
   const { day, month, year } = req.body;
 

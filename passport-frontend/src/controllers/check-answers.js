@@ -1,9 +1,6 @@
 const axios = require('axios');
 const config = require('../../config/config.json');
 
-/**
- * GET /check-answers
- */
 function getCheckAnswers(req, res) {
   const { dateOfBirth, previousPassport, address } = req.session;
 
@@ -20,9 +17,6 @@ function getCheckAnswers(req, res) {
   });
 }
 
-/**
- * POST /check-answers
- */
 async function postCheckAnswers(req, res) {
 
   let referenceNumber;

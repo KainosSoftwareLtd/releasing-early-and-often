@@ -7,7 +7,6 @@ const routes = require('./src/routes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configure Nunjucks
 const nunjucksEnv = nunjucks.configure([
   path.join(__dirname, 'src/views'),
   path.join(__dirname, 'node_modules/govuk-frontend/dist')
@@ -19,11 +18,10 @@ const nunjucksEnv = nunjucks.configure([
 
 app.set('view engine', 'njk');
 
-// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Session configuration
+
 app.use(session({
   secret: 'passport-app-secret-key',
   resave: false,
@@ -31,12 +29,9 @@ app.use(session({
   cookie: { secure: false }
 }));
 
-// Static files - serve GOV.UK Frontend assets
-// The precompiled CSS references /assets/* paths, so we mount assets directory there
 app.use('/assets', express.static(path.join(__dirname, 'node_modules/govuk-frontend/dist/govuk/assets')));
 app.use('/govuk', express.static(path.join(__dirname, 'node_modules/govuk-frontend/dist/govuk')));
 
-// Serve application static files (JS, CSS, images, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes

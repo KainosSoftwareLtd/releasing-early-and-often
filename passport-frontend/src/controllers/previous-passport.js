@@ -1,8 +1,5 @@
 const { validatePreviousPassport } = require('../services/validation');
 
-/**
- * GET /previous-passport
- */
 function getPreviousPassport(req, res) {
   const sessionData = req.session.previousPassport || '';
 
@@ -15,9 +12,7 @@ function getPreviousPassport(req, res) {
   delete req.session.errors;
 }
 
-/**
- * POST /previous-passport
- */
+
 function postPreviousPassport(req, res) {
   const { previousPassport } = req.body;
 

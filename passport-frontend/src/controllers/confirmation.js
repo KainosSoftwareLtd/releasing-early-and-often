@@ -1,6 +1,4 @@
-/**
- * GET /confirmation
- */
+
 function getConfirmation(req, res) {
   // Get reference number from session
   const referenceNumber = req.session.referenceNumber || 'HDJ2123F';
