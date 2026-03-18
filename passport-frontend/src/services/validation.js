@@ -26,8 +26,15 @@ function validateDateOfBirth(date) {
     return { isValid: false, errors };
   }
 
-  // Age eligibility is enforced in the date-of-birth controller.
-  return { isValid: true, errors: [], date: dateObj };
+  // Child eligibility is evaluated here so controllers can route consistently.
+  const today = new Date();
+  let age = today.getFullYear() - year;
+  const monthDifference = today.getMonth() - (month - 1);
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < day)) {
+    age--;
+  }
+
+  return { isValid: true, errors: [], date: dateObj, age, isUnder16: age < 16 };
 }
 
 function validatePreviousPassport(answer) {

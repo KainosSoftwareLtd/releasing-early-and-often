@@ -1,12 +1,28 @@
 {% extends "layout.njk" %}
 
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
 {% block pageTitle %}
   {{ pageTitle }} - UK Passport Application
 {% endblock %}
 
 {% block content %}
-  <button class="fill-button" type="button">Fill</button>
+  <div class="fill-container">
+    <label for="scenario-select" class="scenario-label">Scenario:</label>
+    <select id="scenario-select" class="govuk-select scenario-select">
+      <option value="adult">Adult</option>
+      <option value="child">Child</option>
+    </select>
+    <button class="fill-button" type="button">Fill</button>
+  </div>
   <div class="govuk-width-container">
+    {# Centralised back link: pages set `backHref` to show it #}
+    {% if backHref is defined and backHref %}
+      {{ govukBackLink({
+        text: "Back",
+        href: backHref
+      }) }}
+    {% endif %}
     <main class="govuk-main-wrapper" id="main-content" role="main">
       {% block mainContent %}{% endblock %}
     </main>

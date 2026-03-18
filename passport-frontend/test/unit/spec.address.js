@@ -34,6 +34,16 @@ describe('AddressController', () => {
         errors: {}
       });
     });
+
+    it('should render address page with empty values when no session data', () => {
+      getAddress(req, res);
+
+      expect(res.render).to.have.been.calledWith('pages/address.html', {
+        pageTitle: 'Address details',
+        values: {},
+        errors: {}
+      });
+    });
   });
 
   describe('postAddress', () => {

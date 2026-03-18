@@ -19,7 +19,7 @@ The application handles adult passport applications only (age 16+).
 - **Node.js** with Express framework
 - **Nunjucks** for server-side rendering
 - **GOV.UK Frontend** for styling and components
-- **express-session** for session storage (no database required)
+- **express-session** for session storage
 - **Axios** for HTTP client (backend API calls)
 - **Mocha** with **Chai** and **Sinon** for unit testing
 
@@ -122,7 +122,7 @@ The `config/config.json` file contains feature flags and backend settings:
 ```json
 {
   "featureFlags": {
-    "enabledChildRenewals": false,
+    "enableChildRenewals": false,
     "enableBackendServiceCalls": true
   },
   "backend": {
@@ -138,7 +138,7 @@ The `config/config.json` file contains feature flags and backend settings:
   - `false`: Generates fake reference numbers locally (format: `REF-XXXXXXXXX`)
   - **Fallback**: If backend call fails, generates temporary reference number (format: `TEMP-XXXXXXXXX`)
 
-- **`enabledChildRenewals`**: Placeholder for future functionality
+- **`enableChildRenewals`**: Placeholder for future functionality
 
 ### Backend Configuration
 
