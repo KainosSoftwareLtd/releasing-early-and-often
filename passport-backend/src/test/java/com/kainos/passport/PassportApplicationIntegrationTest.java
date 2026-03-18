@@ -2,6 +2,7 @@ package com.kainos.passport;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kainos.passport.dto.applicationV1.CreateApplicationRequestV1;
+import com.kainos.passport.dto.applicationV2.CreateApplicationRequestV2;
 import com.kainos.passport.entity.PassportApplication;
 import com.kainos.passport.repository.PassportApplicationRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -157,7 +158,7 @@ class PassportApplicationIntegrationTest {
     @DisplayName("Should reject empty string for required fields")
     void createApplication_shouldRejectEmptyRequiredFields() throws Exception {
         CreateApplicationRequestV1 request = CreateApplicationRequestV1.builder()
-                .dateOfBirth("")  // Empty string should fail @NotBlank
+                .dateOfBirth("")
                 .addressLine1("123 Main Street")
                 .townCity("London")
                 .postcode("SW1A 1AA")
@@ -171,5 +172,109 @@ class PassportApplicationIntegrationTest {
 
         List<PassportApplication> applications = applicationRepository.findAll();
         assertThat(applications).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Should create V2 application with parent details and persist to database")
+    void createApplicationV2_shouldPersistToDatabase() throws Exception {
+        CreateApplicationRequestV2 request = CreateApplicationRequestV2.builder()
+                .dateOfBirth("2012-03-15")
+                .previousPassport("no")
+                .addressLine1("123 Main Street")
+                .addressLine2("Apt 4B")
+                .townCity("London")
+                .postcode("SW1A 1AA")
+                .parent1FullName("Jane Doe")
+                .parent1Contact("jane.doe@example.com")
+                .parent2FullName("John Doe")
+                .parent2Contact("john.doe@example.com")
+                .build();
+
+        mockMvc.perform(post("/api/applications")
+                        .header("X-API-Version", "2.0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated());
+
+        List<PassportApplication> applications = applicationRepository.findAll();
+        assertThat(applications).hasSize(1);
+
+        PassportApplication saved = applications.get(0);
+        assertThat(saved.getId()).isNotNull();
+        assertThat(saved.getDateOfBirth()).isEqualTo("2012-03-15");
+        assertThat(saved.getPreviousPassport()).isEqualTo("no");
+        assertThat(saved.getParent1FullName()).isEqualTo("Jane Doe");
+        assertThat(saved.getParent1Contact()).isEqualTo("jane.doe@example.com");
+        assertThat(saved.getParent2FullName()).isEqualTo("John Doe");
+        assertThat(saved.getParent2Contact()).isEqualTo("john.doe@example.com");
+        assertThat(saved.getStatus()).isEqualTo(PassportApplication.ApplicationStatus.IN_PROGRESS);
+    }
+
+    @Test
+    @DisplayName("Should return V2 response including parent details")
+    void createApplicationV2_shouldReturnParentDetailsInResponse() throws Exception {
+        CreateApplicationRequestV2 request = CreateApplicationRequestV2.builder()
+                .dateOfBirth("2012-03-15")
+                .addressLine1("123 Main Street")
+                .townCity("London")
+                .postcode("SW1A 1AA")
+                .parent1FullName("Jane Doe")
+                .parent1Contact("jane.doe@example.com")
+                .build();
+
+        mockMvc.perform(post("/api/applications")
+                        .header("X-API-Version", "2.0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.applicationId").exists())
+                .andExpect(jsonPath("$.application.parent1FullName").value("Jane Doe"))
+                .andExpect(jsonPath("$.application.parent1Contact").value("jane.doe@example.com"));
+    }
+
+    @Test
+    @DisplayName("Should reject V2 request missing required parent details")
+    void createApplicationV2_shouldRejectMissingParentDetails() throws Exception {
+        CreateApplicationRequestV2 request = CreateApplicationRequestV2.builder()
+                .dateOfBirth("2012-03-15")
+                .addressLine1("123 Main Street")
+                .townCity("London")
+                .postcode("SW1A 1AA")
+                // parent1FullName and parent1Contact intentionally omitted
+                .build();
+
+        mockMvc.perform(post("/api/applications")
+                        .header("X-API-Version", "2.0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+        List<PassportApplication> applications = applicationRepository.findAll();
+        assertThat(applications).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Should persist V2 application with optional parent 2 omitted")
+    void createApplicationV2_shouldAllowOptionalParent2() throws Exception {
+        CreateApplicationRequestV2 request = CreateApplicationRequestV2.builder()
+                .dateOfBirth("2012-03-15")
+                .addressLine1("123 Main Street")
+                .townCity("London")
+                .postcode("SW1A 1AA")
+                .parent1FullName("Jane Doe")
+                .parent1Contact("jane.doe@example.com")
+                // parent2 fields intentionally omitted
+                .build();
+
+        mockMvc.perform(post("/api/applications")
+                        .header("X-API-Version", "2.0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated());
+
+        List<PassportApplication> applications = applicationRepository.findAll();
+        assertThat(applications).hasSize(1);
+        assertThat(applications.get(0).getParent2FullName()).isNull();
+        assertThat(applications.get(0).getParent2Contact()).isNull();
     }
 }
