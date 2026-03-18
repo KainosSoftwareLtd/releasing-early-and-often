@@ -2,6 +2,7 @@ package com.kainos.passport.service;
 
 import com.kainos.passport.dto.ApplicationMapper;
 import com.kainos.passport.dto.applicationV1.CreateApplicationRequestV1;
+import com.kainos.passport.dto.applicationV2.CreateApplicationRequestV2;
 import com.kainos.passport.entity.PassportApplication;
 import com.kainos.passport.repository.PassportApplicationRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -149,5 +150,80 @@ class PassportApplicationServiceTest {
         assertThat(result.getAddressLine2()).isEqualTo("Apt 4B");
         assertThat(result.getTownCity()).isEqualTo("London");
         assertThat(result.getPostcode()).isEqualTo("SW1A 1AA");
+    }
+
+    @Test
+    @DisplayName("Should create V2 application with parent details")
+    void createApplicationV2_shouldIncludeParentDetails() {
+        CreateApplicationRequestV2 requestV2 = CreateApplicationRequestV2.builder()
+                .dateOfBirth("2015-03-20")
+                .previousPassport("no")
+                .addressLine1("456 Park Avenue")
+                .addressLine2("Suite 10")
+                .townCity("Manchester")
+                .postcode("M1 2WD")
+                .parent1FullName("Jane Smith")
+                .parent1Contact("jane@example.com")
+                .parent2FullName("John Smith")
+                .parent2Contact("john@example.com")
+                .build();
+
+        PassportApplication mappedV2 = new PassportApplication();
+        mappedV2.setDateOfBirth("2015-03-20");
+        mappedV2.setParent1FullName("Jane Smith");
+        mappedV2.setParent1Contact("jane@example.com");
+        mappedV2.setParent2FullName("John Smith");
+        mappedV2.setParent2Contact("john@example.com");
+
+        PassportApplication savedV2 = new PassportApplication();
+        savedV2.setId(UUID.randomUUID());
+        savedV2.setDateOfBirth("2015-03-20");
+        savedV2.setParent1FullName("Jane Smith");
+        savedV2.setParent1Contact("jane@example.com");
+        savedV2.setParent2FullName("John Smith");
+        savedV2.setParent2Contact("john@example.com");
+        savedV2.setStatus(PassportApplication.ApplicationStatus.IN_PROGRESS);
+        savedV2.setCreatedAt(LocalDateTime.now());
+
+        when(applicationMapper.toEntity(requestV2)).thenReturn(mappedV2);
+        when(applicationRepository.save(any(PassportApplication.class))).thenReturn(savedV2);
+
+        PassportApplication result = applicationService.createApplication(requestV2);
+
+        assertThat(result.getParent1FullName()).isEqualTo("Jane Smith");
+        assertThat(result.getParent1Contact()).isEqualTo("jane@example.com");
+        assertThat(result.getParent2FullName()).isEqualTo("John Smith");
+        assertThat(result.getParent2Contact()).isEqualTo("john@example.com");
+    }
+
+    @Test
+    @DisplayName("Should handle V2 application with only one parent")
+    void createApplicationV2_shouldHandleSingleParent() {
+        CreateApplicationRequestV2 requestV2 = CreateApplicationRequestV2.builder()
+                .dateOfBirth("2015-03-20")
+                .addressLine1("456 Park Avenue")
+                .townCity("Manchester")
+                .postcode("M1 2WD")
+                .parent1FullName("Jane Smith")
+                .parent1Contact("jane@example.com")
+                .build();
+
+        PassportApplication mappedV2 = new PassportApplication();
+        mappedV2.setParent1FullName("Jane Smith");
+        mappedV2.setParent1Contact("jane@example.com");
+
+        when(applicationMapper.toEntity(requestV2)).thenReturn(mappedV2);
+        when(applicationRepository.save(any(PassportApplication.class))).thenAnswer(invocation -> {
+            PassportApplication app = invocation.getArgument(0);
+            app.setId(UUID.randomUUID());
+            return app;
+        });
+
+        PassportApplication result = applicationService.createApplication(requestV2);
+
+        assertThat(result.getParent1FullName()).isEqualTo("Jane Smith");
+        assertThat(result.getParent1Contact()).isEqualTo("jane@example.com");
+        assertThat(result.getParent2FullName()).isNull();
+        assertThat(result.getParent2Contact()).isNull();
     }
 }
