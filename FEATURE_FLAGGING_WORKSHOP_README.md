@@ -154,7 +154,7 @@ That being said, because work is safely feature flagged. Stories may be done in 
 
 ### Story 5: Test End-to-End V2 Child Journey Integration
 
-- **Example Answer Branch:** `TODO PENDING - Own Demo Branch`
+- **Example Answer Branch:** `demo/complete-solution-all-exercises`
 - **User story:**
   As a release team, we want frontend, API V2, and data changes integrated behind feature flags so that we can run a staged release with confidence.
 
@@ -177,18 +177,20 @@ That being said, because work is safely feature flagged. Stories may be done in 
 ### Session Sequence
 
 1. Story 1: Enable child flow behind a flag in frontend.
-2. Story 2: Introduce V2 API behavior for new payloads.
-3. Story 3: Add migration strategy for child-specific schema fields.
-4. Story 4: Validate integrated behavior and rollout process.
+2. Story 2: Add backward-compatible parent detail columns to the database schema.
+3. Story 3: Explore feature-toggled migration behavior and its trade-offs.
+4. Story 4: Introduce V2 API behavior for child-specific payloads.
+5. Story 5: Validate integrated behavior and rollout process end-to-end.
 
 ### Timebox (Example: 3 Hours)
 
 1. Introduction and goals: 15 min
-2. Story 1 hands-on: 40 min
-3. Story 2 hands-on: 35 min
-4. Story 3 hands-on: 35 min
-5. Story 4 testing: 35 min
-6. Debrief and discussion: 20 min
+2. Story 1 hands-on (frontend flag gating): 35 min
+3. Story 2 hands-on (backward-compatible schema): 25 min
+4. Story 3 hands-on (feature-toggled migration trade-offs): 25 min
+5. Story 4 hands-on (V2 API changes): 30 min
+6. Story 5 hands-on (end-to-end validation): 30 min
+7. Debrief and discussion: 20 min
 
 ## Facilitator Notes
 
