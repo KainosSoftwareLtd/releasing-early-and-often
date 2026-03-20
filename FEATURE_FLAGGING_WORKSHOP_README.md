@@ -52,7 +52,77 @@ That being said, because work is safely feature flagged. Stories may be done in 
 
 ---
 
-### Story 2: Versioned API for Child Data
+### Story 2: Backward-Compatible Database Schema for Parent Details
+
+- **Example Answer Branch:** `feature/Exercise-2-add-backward-compatible-parent-columns-to-db`
+- **User story:**
+  As a backend team, we want to add parent detail columns to the existing `passport_applications` table in a backward-compatible way so that the schema supports the child journey without breaking existing records or the current application flow.
+
+#### Acceptance Criteria
+
+1. Four new columns are added to `passport_applications`: `parent1_full_name`, `parent1_contact`, `parent2_full_name`, `parent2_contact`.
+2. All new columns are nullable so that existing rows remain valid without any data migration.
+3. The migration is applied via a versioned Flyway script (`V2__`) so it runs automatically on startup and is tracked.
+4. Existing passport application functionality continues to work unchanged after the migration runs.
+5. The schema change can be applied to a live database without requiring downtime or a coordinated application release.
+
+#### Learning Outcomes
+
+- How to introduce schema changes without breaking existing consumers (backward-compatible migrations).
+- Why nullable columns are the safest way to add new fields to a live table.
+- How Flyway versioned migrations provide deterministic, repeatable schema rollout.
+- The relationship between database changes and API versioning — schema can be deployed ahead of the code that uses it.
+
+#### Tech Notes
+
+- Add a new Flyway migration file at `passport-backend/src/main/resources/db/migration/V2__add_parent_details_columns.sql`.
+- Use `ALTER TABLE passport_applications ADD COLUMN` for each new field — do **not** add `NOT NULL` constraints, as this would break existing rows.
+- The four columns to add are:
+  - `parent1_full_name VARCHAR(255)`
+  - `parent1_contact VARCHAR(255)`
+  - `parent2_full_name VARCHAR(255)` (optional — parent 2 may not exist)
+  - `parent2_contact VARCHAR(255)` (optional)
+- Because the columns are nullable, this migration is safe to run before the V2 API or frontend feature flag is enabled.
+
+---
+
+
+<br/>
+
+**Warning:** The pattern in this story (gating a database migration behind a feature flag) is technically possible but is **not standard practice** in most real-world systems. Database migrations are typically treated as a separate, always-on concern from application feature flags. Mixing the two can introduce operational complexity, make rollback harder to reason about, and lead to schema drift across environments. This story is included to explore the concept and understand its trade-offs, not as a recommended pattern to adopt by default.
+
+
+### Story 3: Feature-Toggled Database Migration
+
+- **Example Answer Branch:** `feature/Exercise-2a-feature-toggled-db-script`
+- **User story:**
+  As a platform team, we want the V2 parent detail schema migration to only run when the `feature.child-renewals.enabled` flag is on so that we can control exactly when database changes are applied, independent of deployment.
+
+#### Acceptance Criteria
+
+1. When `feature.child-renewals.enabled=false`, only the V1 migration runs and no parent columns exist in the database.
+2. When `feature.child-renewals.enabled=true`, the V2 migration runs and all four parent columns (`parent1_full_name`, `parent1_contact`, `parent2_full_name`, `parent2_contact`) are added.
+3. Existing schema and application behaviour remain valid when the flag is off.
+4. The feature flag value is configured in `application.properties`.
+5. Tests explicitly verify both the flag-off (V1 only) and flag-on (V1 + V2) migration outcomes.
+
+#### Learning Outcomes
+
+- How migration execution can be made conditional on a feature flag, and what that means for delivery workflows.
+- The risks and trade-offs of coupling schema migration behaviour to runtime configuration.
+- How to design tests that prove behaviour in both enabled and disabled flag states.
+- Why this pattern is generally treated as an exception and should be approached cautiously.
+
+#### Tech Notes
+
+- Think about having a Flyway config class that will read the feature flag value and then run the relevant migration.
+- Think about how to physically separate the V2 migration script from the V1 scripts so that it can be included or excluded independently.
+- The feature flag value should be configurable via `application.properties`.
+- Consider how you'd write tests that verify the schema state under both flag conditions — and how to keep those test environments isolated from each other.
+
+---
+
+### Story 4: Versioned API for Child Data
 
 - **Example Answer Branch:** `feature/Exercise-3-add-version2-api-to-support-child-journeyy`
 - **User story:**
@@ -82,32 +152,7 @@ That being said, because work is safely feature flagged. Stories may be done in 
 
 ---
 
-### Story 3: Feature-Toggled Database Migration
-
-- **Example Answer Branch:** `feature/Exercise-2-feature-toggled-db-script`
-- **User story:**
-  As a platform team, we want child schema changes to run only under controlled conditions so that deployment risk is reduced.
-
-#### Acceptance Criteria
-
-1. Schema changes can be applied safely for child feature rollout.
-2. Existing schema remains valid for non-child flow.
-3. Migration behavior is deterministic and testable.
-4. Tests cover enabled and disabled migration scenarios.
-
-#### Learning Outcomes
-
-- Safe rollout of schema changes.
-- Migration strategy with feature-flag awareness.
-- Operational risk reduction during deployment.
-
-#### Tech Notes
-
-- TODO -> PENDING
-
----
-
-### Story 4: Test End-to-End V2 Child Journey Integration
+### Story 5: Test End-to-End V2 Child Journey Integration
 
 - **Example Answer Branch:** `TODO PENDING - Own Demo Branch`
 - **User story:**
