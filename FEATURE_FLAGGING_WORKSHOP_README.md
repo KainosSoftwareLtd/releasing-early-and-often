@@ -8,6 +8,14 @@ Each story below is treated as a staged learning path.
 Therefore, for context it might be best to approach one story at a time i.e. starting at 1, 2, etc.<br>
 That being said, because work is safely feature flagged. Stories may be done in any order.
 
+## Scenario
+
+You are part of a digital delivery team working on UK passport applications. The UK government wants to reduce the operational cost of paper-based applications, which are slower and more expensive to process than digital journeys.
+
+The existing digital service only supports adult passport renewals, so families applying for child passports are still more likely to rely on paper-based processes.
+
+In this exercise, you will help introduce a new online child passport journey using feature flags, so the team can release changes safely, protect existing users, and gradually move more applicants away from paper forms.
+
 ## Epic
 
 **Epic title:** Progressive Feature Flagging for Child Passport Journey
@@ -23,7 +31,7 @@ That being said, because work is safely feature flagged. Stories may be done in 
 
 ## Stories
 
-### Story 1: Frontend Feature Flag Gating
+### Story 1: Frontend Feature Flag for Child Journey
 
 - **User story:**
   As a product team, we want the child journey to be available only when a feature flag is enabled so that we can release safely and control exposure.
@@ -34,6 +42,7 @@ That being said, because work is safely feature flagged. Stories may be done in 
 2. Child journey route and pages are available when the flag is on.
 3. Existing non-child flow remains unchanged.
 4. Unit tests cover both flag states.
+5. [Extra] Why not try updating the fill button to work with for this new journey?
 
 #### Learning Outcomes
 
@@ -170,6 +179,8 @@ If you find yourself stuck, feel free to look at the example answer branch. Howe
 2. Existing journey still works when disabled.
 3. Rollback approach is defined and validated.
 4. Release checklist includes observability and post-release checks.
+5. We now have an end-to-end test pack that can be run to verfiy correct behaviour (when feature flag is enabled).
+6. [Extra] We also want normal tests to run if the feature flag is disabled.
 
 #### Learning Outcomes
 
@@ -177,8 +188,74 @@ If you find yourself stuck, feel free to look at the example answer branch. Howe
 - Coordinated rollout across services.
 - Release readiness and rollback planning.
 
+#### Tech Notes
+- To ensure our functionality is correctly implement, we now want to build our test pack for the new feature.
+
 **Example Answer Branch:** `demo/complete-solution-all-exercises`<br>
 If you find yourself stuck, feel free to look at the example answer branch. However, give the exercise a go on your own first
+
+---
+
+### Story 6: Go-Live — Enable the Feature via Feature Flag
+
+- **User story:**
+  As an agile development team, we want to enable the child passport journey for real users by switching on the feature flag in production so that we can execute a controlled go-live without a code deployment.
+
+#### Acceptance Criteria
+
+1. The child journey is accessible to users once the feature flag is enabled, with no code changes or redeployment required.
+2. The kick-out page is no longer shown to users when the flag is on.
+3. The existing adult journey remains fully functional after the flag is enabled.
+4. The V2 API is active and able to handle child-specific data when the flag is on.
+5. Existing V1 API consumers are unaffected by the go-live.
+6. Child application submissions populate the parent detail columns in the database.
+7. The go-live is observable — there is a way to confirm the flag is active and the new journey is being used.
+8. A rollback plan is in place so that the feature can be disabled immediately if issues are detected.
+
+#### Learning Outcomes
+
+- The distinction between a code deployment and a feature release — they don't have to happen at the same time.
+- How feature flags give teams control over go-live timing and exposure.
+- Why observability matters at the point of enablement, not just at deployment.
+- The importance of having a tested rollback path before enabling in production.
+
+#### Tech Notes
+
+- **Frontend:** Set `featureFlag` to `true` in `config/config.json`. This controls whether the child journey routes and pages are accessible to users.
+- **Backend:** Set `feature.child-renewals.enabled=true` in `application.properties`. This controls whether the V2 migration and any flag-gated backend behaviour is active.
+- Both flags should be updated together for a consistent go-live — enabling one without the other may result in a broken or incomplete journey.
+- Think about where these config values live in each environment and who owns changing them — ideally this is a separate concern from a code deployment.
+- Consider what signals you'd monitor to confirm the go-live is healthy (logs, error rates, journey completion).
+- Document your rollback step: what does "turn it off" actually look like in practice for both services?
+
+---
+
+### Story 7: Clean Up Feature Flags
+
+- **User story:**
+  As a development team, we want to remove the feature flag that gated the child journey once it is fully live and stable so that the codebase does not accumulate flag debt and conditional logic.
+
+#### Acceptance Criteria
+
+1. The feature flag condition is removed from the frontend routing and any related config.
+2. The backend feature flag property is removed from `application.properties`.
+3. The child journey is now the default path — no flag check required.
+4. Any flag-specific tests (flag-off scenarios) are removed or updated to reflect the new always-on state.
+5. The codebase has no remaining references to the removed flag.
+
+#### Learning Outcomes
+
+- Why feature flags are temporary by design and must be cleaned up after go-live.
+- The risk of flag debt: flags that are never removed increase complexity and reduce readability.
+- How to safely remove a flag without breaking existing behaviour.
+- The full lifecycle of a feature flag: introduce → gate → release → remove.
+
+#### Tech Notes
+
+- Remove the flag check from `config/config.json` and anywhere it is read in `routes/index.js`.
+- Remove `feature.child-renewals.enabled` from `application.properties` and any related config class.
+- Search the codebase for all references to the flag name to make sure none are missed.
+- Review the test suite: flag-off tests that verified blocked behaviour are no longer valid and should be removed or repurposed.
 
 ---
 
@@ -191,16 +268,20 @@ If you find yourself stuck, feel free to look at the example answer branch. Howe
 3. Story 3: Explore feature-toggled migration behavior and its trade-offs.
 4. Story 4: Introduce V2 API behavior for child-specific payloads.
 5. Story 5: Validate integrated behavior and rollout process end-to-end.
+6. Story 6: Execute a controlled go-live by enabling the feature flag in production.
+7. Story 7: Remove the feature flag and clean up flag-related code.
 
 ### Timebox (Example: 3 Hours)
 
 1. Introduction and goals: 15 min
-2. Story 1 hands-on (frontend flag gating): 35 min
-3. Story 2 hands-on (backward-compatible schema): 25 min
-4. Story 3 hands-on (feature-toggled migration trade-offs): 25 min
-5. Story 4 hands-on (V2 API changes): 30 min
-6. Story 5 hands-on (end-to-end validation): 30 min
-7. Debrief and discussion: 20 min
+2. Story 1 hands-on (frontend flag gating): 30 min
+3. Story 2 hands-on (backward-compatible schema): 20 min
+4. Story 3 hands-on (feature-toggled migration trade-offs): 20 min
+5. Story 4 hands-on (V2 API changes): 25 min
+6. Story 5 hands-on (end-to-end validation): 25 min
+7. Story 6 discussion (go-live flag enablement): 15 min
+8. Story 7 hands-on (flag clean-up): 15 min
+9. Debrief and discussion: 20 min
 
 ## Facilitator Notes
 
