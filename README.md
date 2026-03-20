@@ -2,6 +2,10 @@
 
 This contains the starting base packages for the course on releasing early and often.
 
+## Feature Flagging Workshop
+
+For the workshop epic and user stories, see [FEATURE_FLAGGING_WORKSHOP_README.md](FEATURE_FLAGGING_WORKSHOP_README.md).
+
 Included is also an optional setup and startup script, if you do not have the appropriate tools installed - namely node v24 and java 21.
 
 Monorepo for the Passport training app, containing:
