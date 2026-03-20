@@ -5,7 +5,7 @@
 This workshop teaches progressive delivery using feature flags across frontend, backend API versioning, and database migrations.
 
 Each story below is treated as a staged learning path.
-Therefore, for context it might be best to approach one story at a time i.e. starting at 1, 2, etc.
+Therefore, for context it might be best to approach one story at a time i.e. starting at 1, 2, etc.<br>
 That being said, because work is safely feature flagged. Stories may be done in any order.
 
 ## Epic
@@ -25,7 +25,6 @@ That being said, because work is safely feature flagged. Stories may be done in 
 
 ### Story 1: Frontend Feature Flag Gating
 
-- **Example Answer Branch:** `feature/Exercise-1-enable-child-app-journey-when-feature-flag-is-true`
 - **User story:**
   As a product team, we want the child journey to be available only when a feature flag is enabled so that we can release safely and control exposure.
 
@@ -46,15 +45,18 @@ That being said, because work is safely feature flagged. Stories may be done in 
 
 - Add a featureFlag value in config/config.json
 - Add new routing/content for pages under routes/index.js
-    - /parents-details (get - page to capture parent details)
-    - /child-unavailable (what happens when the featureFlag is disabled i.e. kick out page)
+    - `/parents-details` (get - page to capture parent details)
+        - `Parent1_Fullname`, `Parent1_Email`, `Parent2_Fullname` (optional), `Parent2_Email` (optional)
+    - `/child-unavailable` (what happens when the featureFlag is disabled i.e. kick out page)
 - As part of the routing changes we also want to add child eligibility checks -> to ensure the customer is being routed correctly when the featureFlag is enabled
+
+**Example Answer Branch:** `feature/Exercise-1-enable-child-app-journey-when-feature-flag-is-true`<br>
+If you find yourself stuck, feel free to look at the example answer branch. However, give the exercise a go on your own first
 
 ---
 
 ### Story 2: Backward-Compatible Database Schema for Parent Details
 
-- **Example Answer Branch:** `feature/Exercise-2-add-backward-compatible-parent-columns-to-db`
 - **User story:**
   As a backend team, we want to add parent detail columns to the existing `passport_applications` table in a backward-compatible way so that the schema supports the child journey without breaking existing records or the current application flow.
 
@@ -84,17 +86,13 @@ That being said, because work is safely feature flagged. Stories may be done in 
   - `parent2_contact VARCHAR(255)` (optional)
 - Because the columns are nullable, this migration is safe to run before the V2 API or frontend feature flag is enabled.
 
+**Example Answer Branch:** `feature/Exercise-2-add-backward-compatible-parent-columns-to-db`<br>
+If you find yourself stuck, feel free to look at the example answer branch. However, give the exercise a go on your own first
+
 ---
-
-
-<br/>
-
-**Warning:** The pattern in this story (gating a database migration behind a feature flag) is technically possible but is **not standard practice** in most real-world systems. Database migrations are typically treated as a separate, always-on concern from application feature flags. Mixing the two can introduce operational complexity, make rollback harder to reason about, and lead to schema drift across environments. This story is included to explore the concept and understand its trade-offs, not as a recommended pattern to adopt by default.
-
 
 ### Story 3: Feature-Toggled Database Migration
 
-- **Example Answer Branch:** `feature/Exercise-2a-feature-toggled-db-script`
 - **User story:**
   As a platform team, we want the V2 parent detail schema migration to only run when the `feature.child-renewals.enabled` flag is on so that we can control exactly when database changes are applied, independent of deployment.
 
@@ -120,11 +118,17 @@ That being said, because work is safely feature flagged. Stories may be done in 
 - The feature flag value should be configurable via `application.properties`.
 - Consider how you'd write tests that verify the schema state under both flag conditions — and how to keep those test environments isolated from each other.
 
+<br/>
+
+> **Warning:** The pattern in this story (gating a database migration behind a feature flag) is technically possible but is **not standard practice** in most real-world systems. Database migrations are typically treated as a separate, always-on concern from application feature flags. Mixing the two can introduce operational complexity, make rollback harder to reason about, and lead to schema drift across environments. This story is included to explore the concept and understand its trade-offs, not as a recommended pattern to adopt by default.
+
+**Example Answer Branch:** `feature/Exercise-2a-feature-toggled-db-script`<br>
+If you find yourself stuck, feel free to look at the example answer branch. However, give the exercise a go on your own first
+
 ---
 
 ### Story 4: Versioned API for Child Data
 
-- **Example Answer Branch:** `feature/Exercise-3-add-version2-api-to-support-child-journeyy`
 - **User story:**
   As a backend team, we want to add a V2 API contract for child journey data so that we can evolve the API without breaking V1 consumers.
 
@@ -145,16 +149,18 @@ That being said, because work is safely feature flagged. Stories may be done in 
 - Add a feature flag value for child application inside application.properties.
 - Add a new endpoint with the same name. HINT, look at version endpoints for SpringBoot4.
 - We want the new endpoint to support the following fields:
-    - parent1FullName
-    - parent1Contact
-    - parent2FullName (optional value)
-    - parent2Contact (optional value)
+    - `parent1FullName`
+    - `parent1Contact`
+    - `parent2FullName` (optional value)
+    - `parent2Contact` (optional value)
+
+**Example Answer Branch:** `feature/Exercise-3-add-version2-api-to-support-child-journey`<br>
+If you find yourself stuck, feel free to look at the example answer branch. However, give the exercise a go on your own first
 
 ---
 
 ### Story 5: Test End-to-End V2 Child Journey Integration
 
-- **Example Answer Branch:** `demo/complete-solution-all-exercises`
 - **User story:**
   As a release team, we want frontend, API V2, and data changes integrated behind feature flags so that we can run a staged release with confidence.
 
@@ -171,6 +177,10 @@ That being said, because work is safely feature flagged. Stories may be done in 
 - Coordinated rollout across services.
 - Release readiness and rollback planning.
 
+**Example Answer Branch:** `demo/complete-solution-all-exercises`<br>
+If you find yourself stuck, feel free to look at the example answer branch. However, give the exercise a go on your own first
+
+---
 
 ## Suggested Workshop Plan
 
