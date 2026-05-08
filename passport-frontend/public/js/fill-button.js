@@ -6,6 +6,8 @@
 // Fill button functionality
 function fillFormWithDummyData() {
   const path = window.location.pathname;
+  const fillButton = document.querySelector('.fill-button');
+  const childRenewalsEnabled = fillButton?.dataset.childRenewalsEnabled === 'true';
 
   if (path === '/date-of-birth') {
     const dayInput = document.querySelector('input[name="day"]');
@@ -14,7 +16,7 @@ function fillFormWithDummyData() {
 
     if (dayInput) dayInput.value = '15';
     if (monthInput) monthInput.value = '6';
-    if (yearInput) yearInput.value = '1990';
+    if (yearInput) yearInput.value = childRenewalsEnabled ? '2014' : '1990';
   } else if (path === '/previous-passport') {
     const yesRadio = document.querySelector('input[value="yes"]');
     if (yesRadio) yesRadio.checked = true;
@@ -28,6 +30,16 @@ function fillFormWithDummyData() {
     if (addressLine2) addressLine2.value = 'Apartment 4B';
     if (townCity) townCity.value = 'London';
     if (postcode) postcode.value = 'SW1A 1AA';
+  } else if (path === '/parents-details') {
+    const parent1FullName = document.querySelector('input[name="parent1FullName"]');
+    const parent1Contact = document.querySelector('input[name="parent1Contact"]');
+    const parent2FullName = document.querySelector('input[name="parent2FullName"]');
+    const parent2Contact = document.querySelector('input[name="parent2Contact"]');
+
+    if (parent1FullName) parent1FullName.value = 'Alex Example';
+    if (parent1Contact) parent1Contact.value = 'alex@example.com';
+    if (parent2FullName) parent2FullName.value = 'Sam Example';
+    if (parent2Contact) parent2Contact.value = 'sam@example.com';
   }
 
   // Auto-click the continue button after a short delay to allow form population

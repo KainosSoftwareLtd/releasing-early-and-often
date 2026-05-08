@@ -5,6 +5,7 @@ const previousPassportController = require('../controllers/previous-passport');
 const addressController = require('../controllers/address');
 const checkAnswersController = require('../controllers/check-answers');
 const confirmationController = require('../controllers/confirmation');
+const parentsDetailsController = require('../controllers/parents-details');
 
 // Home - redirect to start
 router.get('/', (req, res) => {
@@ -18,6 +19,10 @@ router.post('/date-of-birth', dateOfBirthController.postDateOfBirth);
 // Child unavailable route
 const childController = require('../controllers/child');
 router.get('/child-unavailable', childController.getChildUnavailable);
+
+// Parent details for child applications
+router.get('/parents-details', parentsDetailsController.getParentsDetails);
+router.post('/parents-details', parentsDetailsController.postParentsDetails);
 
 // Previous UK Passport
 router.get('/previous-passport', previousPassportController.getPreviousPassport);

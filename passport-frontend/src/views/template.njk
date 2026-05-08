@@ -5,7 +5,11 @@
 {% endblock %}
 
 {% block content %}
-  <button class="fill-button" type="button">Fill</button>
+  <button
+    class="fill-button"
+    type="button"
+    data-child-renewals-enabled="{{ 'true' if featureFlags.enabledChildRenewals else 'false' }}"
+  >Fill</button>
   <div class="govuk-width-container">
     <main class="govuk-main-wrapper" id="main-content" role="main">
       {% block mainContent %}{% endblock %}

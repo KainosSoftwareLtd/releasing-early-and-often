@@ -3,6 +3,7 @@ const nunjucks = require('nunjucks');
 const session = require('express-session');
 const path = require('path');
 const routes = require('./src/routes');
+const configService = require('./src/services/config');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +21,11 @@ app.set('view engine', 'njk');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+app.use((req, res, next) => {
+  res.locals.featureFlags = configService.getConfig().featureFlags;
+  next();
+});
 
 
 app.use(session({

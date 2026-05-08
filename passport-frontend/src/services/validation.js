@@ -69,8 +69,45 @@ function validateAddress(address) {
   return { isValid, errors };
 }
 
+function validateParentDetails(parentDetails) {
+  const errors = {};
+  const value = {
+    parent1FullName: (parentDetails.parent1FullName || '').trim(),
+    parent1Contact: (parentDetails.parent1Contact || '').trim(),
+    parent2FullName: (parentDetails.parent2FullName || '').trim(),
+    parent2Contact: (parentDetails.parent2Contact || '').trim()
+  };
+
+  if (!value.parent1FullName) {
+    errors.parent1FullName = 'Enter the first parent full name';
+  }
+
+  if (!value.parent1Contact) {
+    errors.parent1Contact = 'Enter the first parent email address';
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.parent1Contact)) {
+    errors.parent1Contact = 'Enter a valid first parent email address';
+  }
+
+  if (value.parent2FullName && !value.parent2Contact) {
+    errors.parent2Contact = 'Enter the second parent email address';
+  } else if (value.parent2Contact && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.parent2Contact)) {
+    errors.parent2Contact = 'Enter a valid second parent email address';
+  }
+
+  if (value.parent2Contact && !value.parent2FullName) {
+    errors.parent2FullName = 'Enter the second parent full name';
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+    value
+  };
+}
+
 module.exports = {
   validateDateOfBirth,
   validatePreviousPassport,
-  validateAddress
+  validateAddress,
+  validateParentDetails
 };

@@ -1,4 +1,5 @@
 const sinon = require('sinon');
+const configService = require('../../src/services/config');
 const {
   getDateOfBirth,
   postDateOfBirth
@@ -8,6 +9,15 @@ describe('DateOfBirthController', () => {
   let req, res;
 
   beforeEach(() => {
+    sinon.stub(configService, 'getConfig').returns({
+      featureFlags: {
+        enabledChildRenewals: false,
+        enableBackendServiceCalls: true
+      },
+      backend: {
+        apiUrl: 'http://localhost:8080/api'
+      }
+    });
     req = {
       session: {},
       body: {}
@@ -16,6 +26,10 @@ describe('DateOfBirthController', () => {
       render: sinon.stub(),
       redirect: sinon.stub()
     };
+  });
+
+  afterEach(() => {
+    sinon.restore();
   });
 
   describe('getDateOfBirth', () => {
@@ -69,6 +83,25 @@ describe('DateOfBirthController', () => {
       postDateOfBirth(req, res);
 
       expect(res.redirect).to.have.been.calledWith('/child-unavailable');
+    });
+
+    it('should route child applicants to parent details when child renewals are enabled', () => {
+      const today = new Date();
+      const recentYear = today.getFullYear() - 10;
+      configService.getConfig.returns({
+        featureFlags: {
+          enabledChildRenewals: true,
+          enableBackendServiceCalls: true
+        },
+        backend: {
+          apiUrl: 'http://localhost:8080/api'
+        }
+      });
+      req.body = { day: '1', month: '1', year: recentYear.toString() };
+
+      postDateOfBirth(req, res);
+
+      expect(res.redirect).to.have.been.calledWith('/parents-details');
     });
   });
 });

@@ -1,7 +1,8 @@
 const {
   validateDateOfBirth,
   validatePreviousPassport,
-  validateAddress
+  validateAddress,
+  validateParentDetails
 } = require('../../src/services/validation');
 
 describe('ValidationService', () => {
@@ -160,6 +161,45 @@ describe('ValidationService', () => {
       };
       const result = validateAddress(address);
       expect(result.isValid).to.equal(true);
+    });
+  });
+
+  describe('validateParentDetails', () => {
+    it('should return valid when the first parent details are complete', () => {
+      const result = validateParentDetails({
+        parent1FullName: 'Alex Example',
+        parent1Contact: 'alex@example.com',
+        parent2FullName: '',
+        parent2Contact: ''
+      });
+
+      expect(result.isValid).to.equal(true);
+      expect(result.errors).to.deep.equal({});
+    });
+
+    it('should require the first parent details', () => {
+      const result = validateParentDetails({
+        parent1FullName: '',
+        parent1Contact: '',
+        parent2FullName: '',
+        parent2Contact: ''
+      });
+
+      expect(result.isValid).to.equal(false);
+      expect(result.errors.parent1FullName).to.equal('Enter the first parent full name');
+      expect(result.errors.parent1Contact).to.equal('Enter the first parent email address');
+    });
+
+    it('should require both second parent fields together', () => {
+      const result = validateParentDetails({
+        parent1FullName: 'Alex Example',
+        parent1Contact: 'alex@example.com',
+        parent2FullName: 'Sam Example',
+        parent2Contact: ''
+      });
+
+      expect(result.isValid).to.equal(false);
+      expect(result.errors.parent2Contact).to.equal('Enter the second parent email address');
     });
   });
 });

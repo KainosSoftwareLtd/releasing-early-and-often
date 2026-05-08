@@ -3,6 +3,8 @@ package com.kainos.passport.controller;
 import com.kainos.passport.dto.ApplicationMapper;
 import com.kainos.passport.dto.applicationV1.ApplicationResponseV1;
 import com.kainos.passport.dto.applicationV1.CreateApplicationRequestV1;
+import com.kainos.passport.dto.applicationV2.ApplicationResponseV2;
+import com.kainos.passport.dto.applicationV2.CreateApplicationRequestV2;
 import com.kainos.passport.entity.PassportApplication;
 import com.kainos.passport.service.PassportApplicationService;
 import jakarta.validation.Valid;
@@ -14,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +32,9 @@ public class PassportApplicationController {
 
     @Autowired
     private ApplicationMapper applicationMapper;
+
+    @Value("${feature.child-renewals.enabled:false}")
+    private boolean childRenewalsEnabled;
 
     @Operation(
         summary = "Create a new passport application (v1.0)",
@@ -52,6 +58,39 @@ public class PassportApplicationController {
         try {
             PassportApplication application = applicationService.createApplication(request);
             ApplicationResponseV1 response = applicationMapper.toV1(application);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Operation(
+        summary = "Create a new child passport application (v2.0)",
+        description = "Creates a child passport application including parent details and returns an application ID",
+        parameters = {
+            @Parameter(
+                name = "X-API-Version",
+                description = "API version (must be 2.0 for child renewals)",
+                in = ParameterIn.HEADER,
+                schema = @Schema(type = "string", allowableValues = {"2.0"})
+            )
+        }
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Child application created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data"),
+        @ApiResponse(responseCode = "404", description = "Child renewal feature is disabled"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @PostMapping(path = "/applications", version = "2.0")
+    public ResponseEntity<ApplicationResponseV2> createApplicationV2(@Valid @RequestBody CreateApplicationRequestV2 request) {
+        if (!childRenewalsEnabled) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        try {
+            PassportApplication application = applicationService.createApplication(request);
+            ApplicationResponseV2 response = applicationMapper.toV2(application, request);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

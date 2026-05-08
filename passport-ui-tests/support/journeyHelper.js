@@ -1,5 +1,6 @@
 const { navigateTo } = require('./driver');
 const DateOfBirthPage = require('../pages/DateOfBirthPage');
+const ParentsDetailsPage = require('../pages/ParentsDetailsPage');
 const PreviousPassportPage = require('../pages/PreviousPassportPage');
 const AddressPage = require('../pages/AddressPage');
 
@@ -15,6 +16,11 @@ async function completeApplicationJourney(driver, data = {}) {
     day: '15',
     month: '06',
     year: '1990',
+    childApplication: false,
+    parent1FullName: 'Alex Example',
+    parent1Contact: 'alex@example.com',
+    parent2FullName: '',
+    parent2Contact: '',
     hasPreviousPassport: true,
     addressLine1: '10 Downing Street',
     addressLine2: '',
@@ -29,6 +35,17 @@ async function completeApplicationJourney(driver, data = {}) {
   const dobPage = new DateOfBirthPage(driver);
   await dobPage.enterDateOfBirth(formData.day, formData.month, formData.year);
   await dobPage.clickContinue();
+
+  if (formData.childApplication) {
+    const parentsDetailsPage = new ParentsDetailsPage(driver);
+    await parentsDetailsPage.enterParentDetails({
+      parent1FullName: formData.parent1FullName,
+      parent1Contact: formData.parent1Contact,
+      parent2FullName: formData.parent2FullName,
+      parent2Contact: formData.parent2Contact
+    });
+    await parentsDetailsPage.clickContinue();
+  }
 
   // Step 2: Previous Passport
   const previousPassportPage = new PreviousPassportPage(driver);

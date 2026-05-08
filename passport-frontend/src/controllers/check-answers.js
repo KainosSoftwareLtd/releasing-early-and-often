@@ -1,30 +1,44 @@
 const axios = require('axios');
-const config = require('../../config/config.json');
+const configService = require('../services/config');
+const { isChildApplicant, isChildJourneyEnabled } = require('../services/child-journey');
 
 function getCheckAnswers(req, res) {
-  const { dateOfBirth, previousPassport, address } = req.session;
+  const { dateOfBirth, previousPassport, address, parentDetails } = req.session;
+  const isChildJourney = Boolean(
+    dateOfBirth && isChildJourneyEnabled() && isChildApplicant(dateOfBirth)
+  );
 
   // Redirect to start if no data
   if (!dateOfBirth || !previousPassport || !address) {
     return res.redirect('/date-of-birth');
   }
 
+  if (isChildJourney && !parentDetails) {
+    return res.redirect('/parents-details');
+  }
+
   res.render('pages/check-answers.html', {
     pageTitle: 'Check your answers',
     dateOfBirth,
     previousPassport,
-    address
+    address,
+    parentDetails,
+    isChildJourney
   });
 }
 
 async function postCheckAnswers(req, res) {
+  const config = configService.getConfig();
 
   let referenceNumber;
 
   if (config.featureFlags.enableBackendServiceCalls) {
     try {
       // Call backend service
-      const { dateOfBirth, previousPassport, address } = req.session;
+      const { dateOfBirth, previousPassport, address, parentDetails } = req.session;
+      const isChildJourney = Boolean(
+        dateOfBirth && isChildJourneyEnabled() && isChildApplicant(dateOfBirth)
+      );
 
       // Format date of birth as YYYY-MM-DD
       const formattedDateOfBirth = `${dateOfBirth.year}-${dateOfBirth.month.padStart(2, '0')}-${dateOfBirth.day.padStart(2, '0')}`;
@@ -39,10 +53,17 @@ async function postCheckAnswers(req, res) {
         postcode: address.postcode
       };
 
+      if (isChildJourney && parentDetails) {
+        payload.parent1FullName = parentDetails.parent1FullName;
+        payload.parent1Contact = parentDetails.parent1Contact;
+        payload.parent2FullName = parentDetails.parent2FullName;
+        payload.parent2Contact = parentDetails.parent2Contact;
+      }
+
       const response = await axios.post(`${config.backend.apiUrl}/applications`, payload, {
         headers: {
           'Content-Type': 'application/json',
-          'X-API-Version': '1.0'
+          'X-API-Version': isChildJourney ? '2.0' : '1.0'
         },
         timeout: 5000
       });

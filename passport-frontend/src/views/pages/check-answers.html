@@ -7,7 +7,7 @@
 {% block mainContent %}
   {{ govukBackLink({
     text: "Back",
-    href: "/address"
+    href: "/address" if not isChildJourney else "/parents-details"
   }) }}
 
   <div class="govuk-grid-row">
@@ -69,7 +69,26 @@
                 }
               ]
             }
-          }
+          },
+          {
+            key: {
+              text: "Parent or guardian details"
+            },
+            value: {
+              html: parentDetails.parent1FullName + "<br>" +
+                    parentDetails.parent1Contact +
+                    ("<br><br>" + parentDetails.parent2FullName + "<br>" + parentDetails.parent2Contact if parentDetails.parent2FullName or parentDetails.parent2Contact)
+            },
+            actions: {
+              items: [
+                {
+                  href: "/parents-details",
+                  text: "Change",
+                  visuallyHiddenText: "parent or guardian details"
+                }
+              ]
+            }
+          } if isChildJourney
         ]
       }) }}
 

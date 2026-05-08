@@ -3,6 +3,8 @@ package com.kainos.passport.controller;
 import com.kainos.passport.dto.ApplicationMapper;
 import com.kainos.passport.dto.applicationV1.ApplicationResponseV1;
 import com.kainos.passport.dto.applicationV1.CreateApplicationRequestV1;
+import com.kainos.passport.dto.applicationV2.ApplicationResponseV2;
+import com.kainos.passport.dto.applicationV2.CreateApplicationRequestV2;
 import com.kainos.passport.entity.PassportApplication;
 import com.kainos.passport.service.PassportApplicationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -37,8 +40,10 @@ class PassportApplicationControllerTest {
     private PassportApplicationController controller;
 
     private CreateApplicationRequestV1 validRequest;
+        private CreateApplicationRequestV2 validRequestV2;
     private PassportApplication savedApplication;
     private ApplicationResponseV1 responseV1;
+        private ApplicationResponseV2 responseV2;
 
     @BeforeEach
     void setUp() {
@@ -49,6 +54,19 @@ class PassportApplicationControllerTest {
                 .addressLine2("Apt 4B")
                 .townCity("London")
                 .postcode("SW1A 1AA")
+                .build();
+
+        validRequestV2 = CreateApplicationRequestV2.builder()
+                .dateOfBirth("2014-05-15")
+                .previousPassport("no")
+                .addressLine1("123 Main Street")
+                .addressLine2("Apt 4B")
+                .townCity("London")
+                .postcode("SW1A 1AA")
+                .parent1FullName("Alex Example")
+                .parent1Contact("alex@example.com")
+                .parent2FullName("Sam Example")
+                .parent2Contact("sam@example.com")
                 .build();
 
         UUID applicationId = UUID.randomUUID();
@@ -77,6 +95,24 @@ class PassportApplicationControllerTest {
                         .addressLine2("Apt 4B")
                         .townCity("London")
                         .postcode("SW1A 1AA")
+                        .build())
+                .build();
+
+        responseV2 = ApplicationResponseV2.builder()
+                .applicationId(applicationId)
+                .status("IN_PROGRESS")
+                .createdAt(createdAt)
+                .application(ApplicationResponseV2.ApplicationData.builder()
+                        .dateOfBirth("2014-05-15")
+                        .previousPassport("no")
+                        .addressLine1("123 Main Street")
+                        .addressLine2("Apt 4B")
+                        .townCity("London")
+                        .postcode("SW1A 1AA")
+                        .parent1FullName("Alex Example")
+                        .parent1Contact("alex@example.com")
+                        .parent2FullName("Sam Example")
+                        .parent2Contact("sam@example.com")
                         .build())
                 .build();
     }
@@ -175,4 +211,38 @@ class PassportApplicationControllerTest {
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+        @Nested
+        @DisplayName("createApplicationV2()")
+        class CreateApplicationV2Tests {
+
+                @BeforeEach
+                void enableChildRenewals() {
+                        ReflectionTestUtils.setField(controller, "childRenewalsEnabled", true);
+                }
+
+                @Test
+                @DisplayName("Should return 404 when the child renewal flag is disabled")
+                void createApplicationV2_shouldReturn404_whenFlagDisabled() {
+                        ReflectionTestUtils.setField(controller, "childRenewalsEnabled", false);
+
+                        ResponseEntity<ApplicationResponseV2> response = controller.createApplicationV2(validRequestV2);
+
+                        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+                        verifyNoInteractions(applicationService, applicationMapper);
+                }
+
+                @Test
+                @DisplayName("Should return 201 Created when v2 application is created successfully")
+                void createApplicationV2_shouldReturn201_whenSuccessful() {
+                        when(applicationService.createApplication(any(CreateApplicationRequestV2.class)))
+                                        .thenReturn(savedApplication);
+                        when(applicationMapper.toV2(savedApplication, validRequestV2)).thenReturn(responseV2);
+
+                        ResponseEntity<ApplicationResponseV2> response = controller.createApplicationV2(validRequestV2);
+
+                        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+                        assertThat(response.getBody()).isEqualTo(responseV2);
+                }
+        }
 }

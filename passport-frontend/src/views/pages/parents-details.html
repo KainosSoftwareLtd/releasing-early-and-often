@@ -1,0 +1,104 @@
+{% extends "template.njk" %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block mainContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "/date-of-birth"
+  }) }}
+
+  {% if errors.parent1FullName or errors.parent1Contact or errors.parent2FullName or errors.parent2Contact %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: errors.parent1FullName,
+          href: "#parent1FullName"
+        } if errors.parent1FullName,
+        {
+          text: errors.parent1Contact,
+          href: "#parent1Contact"
+        } if errors.parent1Contact,
+        {
+          text: errors.parent2FullName,
+          href: "#parent2FullName"
+        } if errors.parent2FullName,
+        {
+          text: errors.parent2Contact,
+          href: "#parent2Contact"
+        } if errors.parent2Contact
+      ]
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Parent details</h1>
+      <p class="govuk-body">We need details for at least one parent or guardian before we can continue with a child application.</p>
+
+      <form method="post" novalidate>
+        {{ govukInput({
+          label: {
+            text: "First parent or guardian full name"
+          },
+          id: "parent1FullName",
+          name: "parent1FullName",
+          value: values.parent1FullName,
+          autocomplete: "name",
+          errorMessage: {
+            text: errors.parent1FullName
+          } if errors.parent1FullName
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "First parent or guardian email address"
+          },
+          id: "parent1Contact",
+          name: "parent1Contact",
+          value: values.parent1Contact,
+          type: "email",
+          autocomplete: "email",
+          errorMessage: {
+            text: errors.parent1Contact
+          } if errors.parent1Contact
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Second parent or guardian full name (optional)"
+          },
+          id: "parent2FullName",
+          name: "parent2FullName",
+          value: values.parent2FullName,
+          autocomplete: "name",
+          errorMessage: {
+            text: errors.parent2FullName
+          } if errors.parent2FullName
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Second parent or guardian email address (optional)"
+          },
+          id: "parent2Contact",
+          name: "parent2Contact",
+          value: values.parent2Contact,
+          type: "email",
+          autocomplete: "email",
+          errorMessage: {
+            text: errors.parent2Contact
+          } if errors.parent2Contact
+        }) }}
+
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

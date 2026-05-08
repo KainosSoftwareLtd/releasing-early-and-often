@@ -5,7 +5,9 @@
   "scripts": {
     "test": "mocha --timeout 30000 'tests/**/*.test.js'",
     "test:headless": "HEADLESS=true mocha --timeout 30000 'tests/**/*.test.js'",
-    "test:specific": "mocha --timeout 30000"
+    "test:specific": "mocha --timeout 30000",
+    "test:child-enabled": "HEADLESS=true mocha --timeout 30000 'tests/child-renewals-enabled.test.js'",
+    "test:child-disabled": "HEADLESS=true mocha --timeout 30000 'tests/child-renewals-disabled.test.js'"
   },
   "keywords": [
     "selenium",
