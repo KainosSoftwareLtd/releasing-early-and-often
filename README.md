@@ -43,3 +43,25 @@ If you use other tools for controlling java versions instead of SDKman you might
 ```shell
 jenv disable-plugin maven
 ```
+
+## AI Skill Usage
+
+This repo also includes a local AI skill at [ai-skill/feature-flag-rollout-implementer/SKILL.md](/Users/taylor.crawford/Documents/Projects/kainos/release-early-web-app/ai-skill/feature-flag-rollout-implementer/SKILL.md) for feature-flag and staged-rollout work.
+
+Feel free to explore the tasks with this if you want to adopt AI.
+You can use to help with:
+
+* gating routes or pages behind a flag
+* rolling out API or service changes safely
+* adding feature-flagged database or migration behavior
+* validating both flag-off and flag-on paths with tests
+
+When invoking it, refer to the skill by name:
+```text
+feature-flag-rollout-implementer
+```
+
+Example prompt:
+```text
+Use the feature-flag-rollout-implementer to add a release flag for a new child renewal flow, keep flag-off behaviour unchanged, and add tests for both states.
+```
